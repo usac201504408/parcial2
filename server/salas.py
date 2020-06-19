@@ -1,0 +1,1 @@
+#JPGM clase para lectura y escritura de archivo de salas disponibles
