@@ -1,5 +1,5 @@
-#JPGM Parametros de conexion
-MQTT_HOST = "157.245.82.242"
+#JPGM Parametros de conexion MQTT
+MQTT_HOST = "167.71.243.238"
 MQTT_PORT = 1883
 
 #JPGM Parametros de conexion TCP
