@@ -22,7 +22,7 @@ def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
         trama = comandosServer.comandosServer().getTrama(COMMAND_ALIVE, "201504408")       
-        client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
+        # client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
         time.sleep(20)
 
 
