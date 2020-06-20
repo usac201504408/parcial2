@@ -22,7 +22,7 @@ def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
         trama = comandosServer.comandosServer().getTrama(COMMAND_ALIVE, "201504408")       
-        # client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
+        client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
         time.sleep(20)
 
 
@@ -52,21 +52,14 @@ def on_publish(client, userdata, mid):
 #Callback que se ejecuta cuando llega un mensaje al topic suscrito
 def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
-    logging.info("Ha llegado el mensaje al topic: " + str(msg.topic))
+    logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
     mensajedecode =  msg.payload.decode()
-    print("server: llego mensaje " + str(mensajedecode))
     arregloTrama_split = comandosServer.comandosServer().splitTramaCliente(msg.payload)
-    print(arregloTrama_split)
-    if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
-        #llevo un alive de un cliente, ver quien es y guardarlo en la lista de vivos.
-        #y luego responderle con un ACK
-        #trama_alive = comandosServer.comandosServer().getTrama(COMMAND_ACK, str(arregloTrama_split[1]))   
-        client.publish("comandos/14/201504408" , trama_alive, qos = 2, retain = False)
-        print("llego un alive de " + str(arregloTrama_split[1]))
-
-        # print("")
-        # print("El cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
-        # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+ 
+    if(arregloTrama_split[0].encode() != binascii.unhexlify("04")): #alive no muestro al cliente
+        print("")
+        print("El cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
+        logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         
     
    
@@ -96,8 +89,42 @@ client.loop_start()
 #El thread de MQTT queda en el fondo, mientras en el main loop hacemos otra cosa
 try:
     while True:
-        #el server no tiene interfaz grafica
-        pass
+        logging.info("Esperando comando")
+        print("Hola, bienvenido al chat del grupo 14, and i'll tell you all about it when i see you again")
+        print("Menu")
+        print("1. Enviar texto")
+        print("2. Enviar mensaje de voz")
+        print("3.  Salir")
+        print("")
+        menu1 = input("¿Que opcion deseas? : ")  
+        if(menu1 == "1"): #quiere enviar texto
+            print("")
+            print("    1. Enviar a usuario")
+            print("    2. Enviar a sala")
+            print("")
+            menu2 = input("¿Que opcion deseas? : ")
+            if(menu2 == "1"): #enviar a usuario
+                print("")
+                usuario = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
+                topic = "usuarios/14/" + str(usuario)
+                #lo suscribo al topic
+                client.subscribe((str(topic), qos))
+                while True:
+                    chat = input("Ingresa un mensaje: ")
+                    trama_chat = comandosServer.comandosServer().getTrama(COMMAND_CHAT, str(chat))
+                    # print("trama chat: " + str(trama_chat))
+                    client.publish(topic, trama_chat, qos = 2, retain = False)
+            if(menu2 == "2"): #enviar a sala
+                print("")               
+                sala = input("Por favor ingresa la sala donde quieres chatear (S01): ")
+                topic = "salas/14/S01" + str(sala)
+                #lo suscribo al topic
+                client.subscribe((str(topic), qos))
+                while True:
+                    chat = input("Ingresa un mensaje: ")
+                    trama_chat = comandosServer.comandosServer().getTrama(COMMAND_CHAT, str(chat))
+                    # print("trama chat: " + str(trama_chat))
+                    client.publish(topic, trama_chat, qos = 2, retain = False)
 
 
 except KeyboardInterrupt:
