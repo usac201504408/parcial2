@@ -21,7 +21,7 @@ def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
         trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")
-        print("llego")
+        
         client.publish("comandos/14", str(trama), qos = 2, retain = False)
         time.sleep(20)
 
@@ -56,6 +56,9 @@ def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
     logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
     mensajedecode =  msg.payload.decode()
+    #mensajeSplit = comandosCliente.comandosCliente().splitTramaCliente(mensajedecode)
+    # print(mostrarMensaje)
+    # if(mostrarMensaje == True):
     print("")
     print("Nuevo cliente del topic " + str(msg.topic) + " dice: " + str(mensajedecode))
     logging.debug("El contenido del mensaje es: " + str(mensajedecode))
@@ -109,7 +112,9 @@ try:
                 client.subscribe((str(topic), qos))
                 while True:
                     chat = input("Ingresa un mensaje: ")
-                    client.publish(topic, str(chat), qos = 2, retain = False)
+                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
+                    print("trama chat: " + str(trama_chat))
+                    client.publish(topic, str(trama_chat), qos = 2, retain = False)
 
 
 
