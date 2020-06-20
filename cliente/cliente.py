@@ -55,8 +55,8 @@ def on_message(client, userdata, msg):
     logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
     mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
- 
-    if(arregloTrama_split[0].encode() != binascii.unhexlify("04")): #alive no muestro al cliente
+    
+    if(arregloTrama_split[0].encode() != binascii.unhexlify("04") and arregloTrama_split[0].encode() != binascii.unhexlify("05")): #alive no muestro al cliente
         print("")
         print("El cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))

@@ -90,42 +90,7 @@ client.loop_start()
 #El thread de MQTT queda en el fondo, mientras en el main loop hacemos otra cosa
 try:
     while True:
-        logging.info("Esperando comando")
-        print("Hola, bienvenido al chat del grupo 14, and i'll tell you all about it when i see you again")
-        print("Menu")
-        print("1. Enviar texto")
-        print("2. Enviar mensaje de voz")
-        print("3.  Salir")
-        print("")
-        menu1 = input("¿Que opcion deseas? : ")  
-        if(menu1 == "1"): #quiere enviar texto
-            print("")
-            print("    1. Enviar a usuario")
-            print("    2. Enviar a sala")
-            print("")
-            menu2 = input("¿Que opcion deseas? : ")
-            if(menu2 == "1"): #enviar a usuario
-                print("")
-                usuario = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
-                topic = "usuarios/14/" + str(usuario)
-                #lo suscribo al topic
-                client.subscribe((str(topic), qos))
-                while True:
-                    chat = input("Ingresa un mensaje: ")
-                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
-                    # print("trama chat: " + str(trama_chat))
-                    client.publish(topic, trama_chat, qos = 2, retain = False)
-            if(menu2 == "2"): #enviar a sala
-                print("")               
-                sala = input("Por favor ingresa la sala donde quieres chatear (S01): ")
-                topic = "salas/14/S01" + str(sala)
-                #lo suscribo al topic
-                client.subscribe((str(topic), qos))
-                while True:
-                    chat = input("Ingresa un mensaje: ")
-                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
-                    # print("trama chat: " + str(trama_chat))
-                    client.publish(topic, trama_chat, qos = 2, retain = False)
+        pass
 
 
 except KeyboardInterrupt:
