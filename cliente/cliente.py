@@ -48,8 +48,6 @@ client.connect(host=MQTT_HOST, port = MQTT_PORT) #Conectar al servidor remoto
 
 #Nos conectaremos a distintos topics:
 qos = 2
-#Subscripcion simple con tupla (topic,qos)
-# client.subscribe(("comandos/14/201504408", qos))
 #suscribirse a todos los topics del archivo
 topics = lecturaArchivos.LecturaArchivo("topics.txt").getArreglo()
 for topic in topics:
@@ -67,8 +65,32 @@ client.loop_start()
 #El thread de MQTT queda en el fondo, mientras en el main loop hacemos otra cosa
 try:
     while True:
-        logging.info("olakease")
-        time.sleep(10)
+        logging.info("Esperando comando")
+        print("Hola, bienvenido al chat del grupo 14, and i'll tell you all about it when i see you again")
+        print("Menu")
+        print("1. Enviar texto")
+        print("2. Enviar mensaje de voz")
+        print("3.  Salir")
+        print("")
+        menu1 = input("¿Que opcion deseas? : ")  
+        if(menu1 == "1"): #quiere enviar texto
+            print("")
+            print("    1. Enviar a usuario")
+            print("    2. Enviar a sala")
+            print("")
+            menu2 = input("¿Que opcion deseas? : ")
+            if(menu2 == "1"): #enviar a usuario
+                print("")
+                usuario = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
+                topic = "usuarios/14/" + str(usuario)
+                #lo suscribo al topic
+                client.subscribe((str(topic), qos))
+                while True:
+                    chat = input("Ingresa un mensaje")
+                    client.publish(topic, str(chat), qos = 2, retain = False)
+
+
+
         
 
 
