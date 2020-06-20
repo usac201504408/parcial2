@@ -21,7 +21,7 @@ logging.basicConfig(
 def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
-        trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")       
+        trama = comandosServer.comandosServer().getTrama(COMMAND_ALIVE, "201504408")       
         client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
         time.sleep(20)
 
@@ -54,12 +54,12 @@ def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
     logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
     mensajedecode =  msg.payload.decode()
-    arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
+    arregloTrama_split = comandosServer.comandosServer().splitTramaCliente(msg.payload)
  
     if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
         #llevo un alive de un cliente, ver quien es y guardarlo en la lista de vivos.
         #y luego responderle con un ACK
-        trama_alive = comandosCliente.comandosCliente().getTrama(COMMAND_ACK, str(arregloTrama_split[1]))   
+        trama_alive = comandosServer.comandosServer().getTrama(COMMAND_ACK, str(arregloTrama_split[1]))   
         client.publish("comandos/14/" + str(arregloTrama_split[1]) , trama_alive, qos = 2, retain = False)
         print("llego un alive de " + str(arregloTrama_split[1]))
 
