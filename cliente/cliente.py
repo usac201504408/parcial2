@@ -8,6 +8,7 @@ import time
 import lecturaArchivos
 import comandosCliente
 import threading
+import binascii
 
 
 #Configuracion inicial de logging
@@ -22,7 +23,7 @@ def postAlive():
         #hago un publish para decir que estoy vivo
         trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")
         
-        client.publish("comandos/14", str(trama), qos = 2, retain = False)
+        client.publish("comandos/14", trama, qos = 2, retain = False)
         time.sleep(20)
 
 
@@ -56,12 +57,13 @@ def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
     logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
     mensajedecode =  msg.payload.decode()
-    #mensajeSplit = comandosCliente.comandosCliente().splitTramaCliente(mensajedecode)
-    # print(mostrarMensaje)
-    # if(mostrarMensaje == True):
-    print("")
-    print("Nuevo cliente del topic " + str(msg.topic) + " dice: " + str(mensajedecode))
-    logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+    arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
+ 
+    if(arregloTrama_split[0].encode() != binascii.unhexlify("04")): #alive no muestro
+        print("")
+        print("Nuevo cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
+        logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+        
     
    
 
@@ -114,7 +116,19 @@ try:
                     chat = input("Ingresa un mensaje: ")
                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
                     print("trama chat: " + str(trama_chat))
-                    client.publish(topic, str(trama_chat), qos = 2, retain = False)
+                    client.publish(topic, trama_chat, qos = 2, retain = False)
+            if(menu2 == "2"): #enviar a sala
+                print("")               
+                sala = input("Por favor ingresa la sala donde quieres chatear (S01): ")
+                topic = "salas/14/S01" + str(sala)
+                #lo suscribo al topic
+                client.subscribe((str(topic), qos))
+                while True:
+                    chat = input("Ingresa un mensaje: ")
+                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
+                    print("trama chat: " + str(trama_chat))
+                    client.publish(topic, trama_chat, qos = 2, retain = False)
+
 
 
 

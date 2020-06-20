@@ -10,6 +10,7 @@ class comandosCliente(object):
        
         trama = bytes
         
+        
         #se codifica la variable para poderla sumar
         variable1 = variable1.encode()
         separador = separador.encode()
@@ -18,40 +19,43 @@ class comandosCliente(object):
             pass
         elif(comando == binascii.unhexlify("04")): #alive usa 1 variable y una constante
             trama = comando + bytes(separador) + bytes(variable1)
-        elif(comando == binascii.unhexlify("80")): #comando para chat
+        elif(comando == binascii.unhexlify("08")): #comando para chat
             trama = comando + bytes(separador) + bytes(variable1)
-            print("entro")
+            
+            
         return trama
 
     def splitTramaCliente(self, trama, separador = "$"):
-        # print("trama que vino: " + str(trama))
-        # print(type(trama))
-        # if(type(trama) == bytes): #si la trama son bytes osea no es parte del chat
         #verifico si le muestro o no al usuario este mensaje
         #las tramas ALIVE emitidas por el cliente no se las muestro a el
-        print("trama para split" + str(trama))
-        mensajeSplit = ""
+        trama = bytes(trama)
         trama = trama.decode()
-        print("trama decode" + str(trama))
         arregloTrama = trama.split(separador)
-        print(arregloTrama)
-        # print('Recibido: {!r}'.format(trama))
         
         #el primer item es el comando, aqui valido si el comando es para mostrarle al cliente
         #se codifica nuevamente ahora que ya esta aislado para compararla
         if(arregloTrama[0].encode() == binascii.unhexlify("04")):
             # print("es trama alive")
-            return arregloTrama[1]
-        elif(arregloTrama[0].encode() == binascii.unhexlify("04")):
-            # print("es trama alive")
-            return arregloTrama[1]
-        return mensajeSplit
+            return arregloTrama
+        elif(arregloTrama[0].encode() == binascii.unhexlify("08")):
+            # print("es trama chat")
+            return arregloTrama
+        return arregloTrama
         
             
 #codigo de test clase
 # objetoComandos = comandosCliente()
-# # # trama_recibida = objetoComandos.getTrama(binascii.unhexlify("05"), "201504408")
-# trama_chat = objetoComandos.getTrama(b'\x80', str("hola"))
-# print("trama chat: " + str(trama_chat))
-# tramaCLiente = objetoComandos.boolTramaCliente(b'\x04$201504408', "$")
-# print(tramaCLiente)
+# # # # # trama_recibida = objetoComandos.getTrama(binascii.unhexlify("05"), "201504408")
+# # # trama_chat = objetoComandos.getTrama(b'\x80', str("hola"))
+# # # print("trama chat: " + str(trama_chat))
+# tramaCLiente = objetoComandos.splitTramaCliente(b'\x08$hola', "$")
+# # print(tramaCLiente)
+# print(type(tramaCLiente[0].encode()))
+# print(type(binascii.unhexlify("08")))
+# print(type(binascii.unhexlify("04")))
+
+# if(tramaCLiente[0].encode() != binascii.unhexlify("04")):
+#     print("mensaje de texto")
+#     print(tramaCLiente[0].encode())
+# else:
+#     print(tramaCLiente[0].encode())
