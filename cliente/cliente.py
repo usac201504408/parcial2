@@ -2,9 +2,12 @@
 #imports
 import paho.mqtt.client as mqtt
 from broker import *
+from globalconst import *
 import logging
 import time
 import lecturaArchivos
+import comandosCliente
+import threading
 
 
 #Configuracion inicial de logging
@@ -13,26 +16,49 @@ logging.basicConfig(
     format = '[%(levelname)s] (%(threadName)-10s) %(message)s'
     )
 
+
+def postAlive():
+    while True:
+        #hago un publish para decir que estoy vivo
+        trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")
+        print("llego")
+        client.publish("comandos/14", str(trama), qos = 2, retain = False)
+        time.sleep(20)
+
+
 #Handler en caso suceda la conexion con el broker MQTT
 def on_connect(client, userdata, flags, rc): 
     connectionText = "CONNACK recibido del broker con codigo: " + str(rc)
-    logging.info(connectionText)
+    logging.debug(connectionText)
     #AQUI COLOCAR HILO ALIVE
+
+    #Lanza el primer hilo con los parámetros:
+    #name: Nombre "humano" para identificar fácil al hilo
+    #target: La función a ejecutar (o método de un objeto)
+    #args: argumentos, deben ser enviados como tupla
+    #daemon: servicio corriendo de fondo -> permite detener el hilo con "Thread._stop()"
+    t1 = threading.Thread(name = 'Contador de 1 segundo',
+                            target = postAlive,
+                            args = (()),
+                            daemon = True
+                        )
+    t1.start()
 
 #Handler en caso se publique satisfactoriamente en el broker MQTT
 def on_publish(client, userdata, mid): 
     publishText = "Publicacion satisfactoria"
-    logging.info(publishText)
+    logging.debug(publishText)
     
 
 
 #Callback que se ejecuta cuando llega un mensaje al topic suscrito
 def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
-    logging.info("Ha llegado el mensaje al topic: " + str(msg.topic))
+    logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
     mensajedecode =  msg.payload.decode()
-  
-    logging.info("El contenido del mensaje es: " + str(mensajedecode))
+    print("")
+    print("Nuevo cliente del topic " + str(msg.topic) + " dice: " + str(mensajedecode))
+    logging.debug("El contenido del mensaje es: " + str(mensajedecode))
     
    
 
@@ -56,9 +82,9 @@ for topic in topics:
 
 
 #Mensaje de prueba MQTT en el topic "test"
-client.publish("comandos/14/201504408", "Mensaje inicial", qos = 2, retain = False)
-#Mensaje de prueba MQTT en el topic "test"
-client.publish("comandos/14/201504408", "Mensaje inicial2", qos = 2, retain = False)
+# client.publish("comandos/14/201504408", "Mensaje inicial", qos = 2, retain = False)
+# #Mensaje de prueba MQTT en el topic "test"
+# client.publish("comandos/14/201504408", "Mensaje inicial2", qos = 2, retain = False)
 #Iniciamos el thread (implementado en paho-mqtt) para estar atentos a mensajes en los topics subscritos
 client.loop_start()
 
@@ -86,7 +112,7 @@ try:
                 #lo suscribo al topic
                 client.subscribe((str(topic), qos))
                 while True:
-                    chat = input("Ingresa un mensaje")
+                    chat = input("Ingresa un mensaje: ")
                     client.publish(topic, str(chat), qos = 2, retain = False)
 
 
