@@ -11,3 +11,4 @@ COMMAND_NO = b'\x07'
 #JPGM System filenames
 USERS_FILENAME = 'usuarios'
 ROOMS_FILENAME = 'salas'
+

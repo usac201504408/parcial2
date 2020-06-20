@@ -81,10 +81,6 @@ for topic in topics:
 
 
 
-#Mensaje de prueba MQTT en el topic "test"
-# client.publish("comandos/14/201504408", "Mensaje inicial", qos = 2, retain = False)
-# #Mensaje de prueba MQTT en el topic "test"
-# client.publish("comandos/14/201504408", "Mensaje inicial2", qos = 2, retain = False)
 #Iniciamos el thread (implementado en paho-mqtt) para estar atentos a mensajes en los topics subscritos
 client.loop_start()
 
