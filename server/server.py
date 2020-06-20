@@ -6,7 +6,7 @@ from globalconst import *
 import logging
 import time
 import lecturaArchivos
-import comandosServer
+import comandosCliente
 import threading
 import binascii
 
@@ -21,7 +21,7 @@ logging.basicConfig(
 def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
-        trama = comandosServer.comandosServer().getTrama(COMMAND_ALIVE, "201504408")       
+        trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")       
         client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
         time.sleep(20)
 
@@ -54,7 +54,7 @@ def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
     logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
     mensajedecode =  msg.payload.decode()
-    arregloTrama_split = comandosServer.comandosServer().splitTramaCliente(msg.payload)
+    arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
  
     if(arregloTrama_split[0].encode() != binascii.unhexlify("04")): #alive no muestro al cliente
         print("")
@@ -111,7 +111,7 @@ try:
                 client.subscribe((str(topic), qos))
                 while True:
                     chat = input("Ingresa un mensaje: ")
-                    trama_chat = comandosServer.comandosServer().getTrama(COMMAND_CHAT, str(chat))
+                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
                     # print("trama chat: " + str(trama_chat))
                     client.publish(topic, trama_chat, qos = 2, retain = False)
             if(menu2 == "2"): #enviar a sala
@@ -122,7 +122,7 @@ try:
                 client.subscribe((str(topic), qos))
                 while True:
                     chat = input("Ingresa un mensaje: ")
-                    trama_chat = comandosServer.comandosServer().getTrama(COMMAND_CHAT, str(chat))
+                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
                     # print("trama chat: " + str(trama_chat))
                     client.publish(topic, trama_chat, qos = 2, retain = False)
 

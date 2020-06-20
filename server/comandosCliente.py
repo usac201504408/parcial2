@@ -1,7 +1,7 @@
 #JPGM clase para comandos de cliente
 import binascii
 
-class comandosServer(object):
+class comandosCliente(object):
 
     def __init__(self):
         pass
