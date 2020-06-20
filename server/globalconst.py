@@ -2,6 +2,7 @@ ALIVE_PERIOD = 2 #JPGM Período entre envío de tramas ALIVE
 ALIVE_CONTINUOUS = 0.1 #JPGM Período entre envío de tramas ALIVE si no hay respuesta
 
 #JPGM COMMANDS
+COMMAND_CHAT = b'\x08'
 COMMAND_FTR = b'\x03'
 COMMAND_ALIVE = b'\x04'
 COMMAND_ACK = b'\x05'

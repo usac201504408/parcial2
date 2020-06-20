@@ -32,14 +32,6 @@ class comandosCliente(object):
         trama = trama.decode()
         arregloTrama = trama.split(separador)
         
-        #el primer item es el comando, aqui valido si el comando es para mostrarle al cliente
-        #se codifica nuevamente ahora que ya esta aislado para compararla
-        if(arregloTrama[0].encode() == binascii.unhexlify("04")):
-            # print("es trama alive")
-            return arregloTrama
-        elif(arregloTrama[0].encode() == binascii.unhexlify("08")):
-            # print("es trama chat")
-            return arregloTrama
         return arregloTrama
         
             

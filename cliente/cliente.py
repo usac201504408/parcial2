@@ -21,9 +21,8 @@ logging.basicConfig(
 def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
-        trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")
-        
-        client.publish("comandos/14", trama, qos = 2, retain = False)
+        trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")       
+        client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
         time.sleep(20)
 
 
@@ -31,8 +30,6 @@ def postAlive():
 def on_connect(client, userdata, flags, rc): 
     connectionText = "CONNACK recibido del broker con codigo: " + str(rc)
     logging.debug(connectionText)
-    #AQUI COLOCAR HILO ALIVE
-
     #Lanza el primer hilo con los parámetros:
     #name: Nombre "humano" para identificar fácil al hilo
     #target: La función a ejecutar (o método de un objeto)
@@ -59,9 +56,9 @@ def on_message(client, userdata, msg):
     mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
  
-    if(arregloTrama_split[0].encode() != binascii.unhexlify("04")): #alive no muestro
+    if(arregloTrama_split[0].encode() != binascii.unhexlify("04")): #alive no muestro al cliente
         print("")
-        print("Nuevo cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
+        print("El cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         
     
@@ -115,7 +112,7 @@ try:
                 while True:
                     chat = input("Ingresa un mensaje: ")
                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
-                    print("trama chat: " + str(trama_chat))
+                    # print("trama chat: " + str(trama_chat))
                     client.publish(topic, trama_chat, qos = 2, retain = False)
             if(menu2 == "2"): #enviar a sala
                 print("")               
@@ -126,13 +123,8 @@ try:
                 while True:
                     chat = input("Ingresa un mensaje: ")
                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
-                    print("trama chat: " + str(trama_chat))
+                    # print("trama chat: " + str(trama_chat))
                     client.publish(topic, trama_chat, qos = 2, retain = False)
-
-
-
-
-        
 
 
 except KeyboardInterrupt:
