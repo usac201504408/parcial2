@@ -22,7 +22,7 @@ def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
         trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")       
-        client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
+        # client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
         time.sleep(20)
 
 
@@ -56,11 +56,12 @@ def on_message(client, userdata, msg):
     mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
  
-    if(arregloTrama_split[0].encode() != binascii.unhexlify("04")): #alive no muestro al cliente
+    if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
         print("")
         print("El cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
-        
+        trama_ack = comandosCliente.comandosCliente().getTrama(COMMAND_ACK, str(arregloTrama_split[1])) 
+        client.publish("comandos/14/" + str(arregloTrama_split[1]), trama_ack, qos = 2, retain = False)
     
    
 

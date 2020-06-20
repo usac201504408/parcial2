@@ -21,6 +21,8 @@ class comandosCliente(object):
             trama = comando + bytes(separador) + bytes(variable1)
         elif(comando == binascii.unhexlify("08")): #comando para chat
             trama = comando + bytes(separador) + bytes(variable1)
+        elif(comando == binascii.unhexlify("05")): #comando para acknowledge
+            trama = comando + bytes(separador) + bytes(variable1)
             
             
         return trama
