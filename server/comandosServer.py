@@ -1,4 +1,4 @@
-#JPGM clase para comandos del server
+#JPGM clase para comandos de cliente
 import binascii
 
 class comandosServer(object):
@@ -8,7 +8,9 @@ class comandosServer(object):
 
     def getTrama(self, comando, variable1, variable2 = "", separador = "$"):
        
-        trama = bytes               
+        trama = bytes
+        
+        
         #se codifica la variable para poderla sumar
         variable1 = variable1.encode()
         separador = separador.encode()
@@ -18,8 +20,6 @@ class comandosServer(object):
         elif(comando == binascii.unhexlify("04")): #alive usa 1 variable y una constante
             trama = comando + bytes(separador) + bytes(variable1)
         elif(comando == binascii.unhexlify("08")): #comando para chat
-            trama = comando + bytes(separador) + bytes(variable1)
-        elif(comando == binascii.unhexlify("05")): #comando para ACKNOWLEDGE alive
             trama = comando + bytes(separador) + bytes(variable1)
             
             
