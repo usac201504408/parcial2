@@ -6,7 +6,7 @@ from globalconst import *
 import logging
 import time
 import lecturaArchivos
-import comandosCliente
+import comandosServer
 import threading
 import binascii
 
