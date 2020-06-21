@@ -56,13 +56,26 @@ def on_message(client, userdata, msg):
     mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
  
+
     if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
         print("")
-        print("El cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
+        print("El cliente del topic " + str(msg.topic) + " da el comando ALIVE y dice: " + str(arregloTrama_split[1]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         trama_ack = comandosCliente.comandosCliente().getTrama(COMMAND_ACK, str(arregloTrama_split[1])) 
         client.publish("comandos/14/" + str(arregloTrama_split[1]), trama_ack, qos = 2, retain = False)
     
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("05")): #acknowledge del server
+        # print("")
+        # print("El cliente del topic " + str(msg.topic) + "da el comando ACK y dice: " + str(arregloTrama_split[1]))
+        # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+        pass
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): 
+        print("")
+        print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
+        logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+
+
+  
    
 
 #conexion a mqtt

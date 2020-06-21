@@ -56,11 +56,17 @@ def on_message(client, userdata, msg):
     mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
     
-    if(arregloTrama_split[0].encode() != binascii.unhexlify("04") and arregloTrama_split[0].encode() != binascii.unhexlify("05")): #alive no muestro al cliente
+    if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
+        pass
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("05")): #acknowledge del server
+        # print("")
+        # print("El cliente del topic " + str(msg.topic) + " da el comando ACK y dice: " + str(arregloTrama_split[1]))
+        # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+        pass
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): 
         print("")
-        print("El cliente del topic " + str(msg.topic) + " dice: " + str(arregloTrama_split[1]))
+        print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
-        
     
    
 
@@ -76,6 +82,12 @@ client.connect(host=MQTT_HOST, port = MQTT_PORT) #Conectar al servidor remoto
 
 #Nos conectaremos a distintos topics:
 qos = 2
+#extraer el carnet del cliente conectado -> servira para saber a que topic de comandos pertenece
+usuariosFile = lecturaArchivos.LecturaArchivo("usuario.txt").getArreglo()
+usuario = "" #NUMERO DE CARNET DEL CLIENTE 
+for usuario in usuariosFile:
+    topic = "comandos/14/" + str(usuario)
+    client.subscribe((str(topic), qos))
 #suscribirse a todos los topics del archivo
 topics = lecturaArchivos.LecturaArchivo("topics.txt").getArreglo()
 for topic in topics:
@@ -117,7 +129,7 @@ try:
             if(menu2 == "2"): #enviar a sala
                 print("")               
                 sala = input("Por favor ingresa la sala donde quieres chatear (S01): ")
-                topic = "salas/14/S01" + str(sala)
+                topic = "salas/14/" + str(sala)
                 #lo suscribo al topic
                 client.subscribe((str(topic), qos))
                 while True:
@@ -125,6 +137,36 @@ try:
                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
                     # print("trama chat: " + str(trama_chat))
                     client.publish(topic, trama_chat, qos = 2, retain = False)
+
+        if(menu1 == "2"): #quiere enviar o recibir archivos
+            print("")
+            print("    1. Enviar a usuario")
+            print("    2. Enviar a sala")
+            print("")
+            menu2 = input("¿Que opcion deseas? : ")
+            if(menu2 == "1"): #enviar a usuario
+                print("")
+                duracion = input("¿Que duracion tendra el audio? : ")
+                usuarioEnvio = input("Por favor ingresa el carnet del usuario al que deseas enviar el audio: ")
+                topic = "comandos/14/" + usuario
+                #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
+                fileSize = 64 * 1024
+                trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
+                #se publica en mqtt
+                client.publish(topic, trama_FTR, qos = 2, retain = False)
+
+
+
+            if(menu2 == "2"): #enviar a sala
+                print("")
+                duracion = input("¿Que duracion tendra el audio? : ")
+                sala = input("Por favor ingresa el nombre de la sala a la que deseas enviar el audio: ")
+                topic = "comandos/14/" + usuario
+                #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
+                fileSize = 64 * 1024
+                trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(sala), str(fileSize))
+                client.publish(topic, trama_FTR, qos = 2, retain = False)
+
 
 
 except KeyboardInterrupt:

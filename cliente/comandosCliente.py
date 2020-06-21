@@ -16,7 +16,8 @@ class comandosCliente(object):
         separador = separador.encode()
         #puede venir 1, 2 o mas, yo voy a empezar a partir para armar la trama
         if(comando == binascii.unhexlify("03")): #transferencia archivos, usa dos variables y una constante
-            pass
+            variable2 = variable2.encode()
+            trama = comando + bytes(separador) + bytes(variable1) + bytes(separador) + bytes(variable2)
         elif(comando == binascii.unhexlify("04")): #alive usa 1 variable y una constante
             trama = comando + bytes(separador) + bytes(variable1)
         elif(comando == binascii.unhexlify("08")): #comando para chat
@@ -38,7 +39,7 @@ class comandosCliente(object):
         
             
 #codigo de test clase
-# objetoComandos = comandosCliente()
+objetoComandos = comandosCliente()
 # # # # # trama_recibida = objetoComandos.getTrama(binascii.unhexlify("05"), "201504408")
 # # # trama_chat = objetoComandos.getTrama(b'\x80', str("hola"))
 # # # print("trama chat: " + str(trama_chat))
@@ -53,3 +54,8 @@ class comandosCliente(object):
 #     print(tramaCLiente[0].encode())
 # else:
 #     print(tramaCLiente[0].encode())
+# filesize = 64 * 1024
+# tramaCLiente = objetoComandos.getTrama(binascii.unhexlify("03"), str("201504408"), str(filesize))
+# print(tramaCLiente)
+# tramasplit = objetoComandos.splitTramaCliente(tramaCLiente, "$")
+# print(tramasplit)

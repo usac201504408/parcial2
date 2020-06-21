@@ -16,7 +16,7 @@ class LecturaArchivo(object):
 
 
 #Ejemplo de consumo de la clase
-# nuevoarreglo = LecturaArchivo("topics.txt").getArreglo()
+# nuevoarreglo = LecturaArchivo("usuario.txt").getArreglo()
 # print(nuevoarreglo)
      
 
