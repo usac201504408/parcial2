@@ -64,10 +64,11 @@ def on_message(client, userdata, msg):
         # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         pass
     elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR del ciente
-        # print("")
-        # print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
-        # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
-        pass
+        print("")
+        print(str(msg.topic))
+        print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
+        print(str(msg.topic).split("/"))
+        # pass
     elif(arregloTrama_split[0].encode() == binascii.unhexlify("06")): #trama FTR del ciente
         print("")
         print("El cliente del topic " + str(msg.topic) + " da el comando OK y dice: " + str(arregloTrama_split[1]))

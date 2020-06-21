@@ -74,11 +74,11 @@ def on_message(client, userdata, msg):
         print("El cliente del topic " + str(msg.topic) + " da el comando FTR para enviar a: " + str(arregloTrama_split[1]) + " el tamanio es de: " + str(arregloTrama_split[2]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         #se procede a evaluar si le damos respuesta de NO o de OK
-        #se extrae el remitente del topic
-    
+        #se extrae el remitente del topic    
         remitente = str(msg.topic).split("/")[2]
         trama_ok = comandosCliente.comandosCliente().getTrama(COMMAND_OK, str(remitente)) 
         client.publish("comandos/14/" + str(remitente), trama_ok, qos = 2, retain = False)
+        print("Se envio un comando OK al cliente" + str(remitente))
 
 
   
