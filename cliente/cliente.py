@@ -53,7 +53,7 @@ def on_publish(client, userdata, mid):
 def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
     logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
-    mensajedecode =  msg.payload.decode()
+    # mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
     
     if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
@@ -63,10 +63,15 @@ def on_message(client, userdata, msg):
         # print("El cliente del topic " + str(msg.topic) + " da el comando ACK y dice: " + str(arregloTrama_split[1]))
         # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         pass
-    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): 
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR del ciente
+        # print("")
+        # print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
+        # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+        pass
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("06")): #trama FTR del ciente
         print("")
-        print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
-        logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+        print("El cliente del topic " + str(msg.topic) + " da el comando OK y dice: " + str(arregloTrama_split[1]))
+
     
    
 

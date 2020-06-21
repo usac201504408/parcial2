@@ -39,7 +39,7 @@ class comandosCliente(object):
         
             
 #codigo de test clase
-objetoComandos = comandosCliente()
+#objetoComandos = comandosCliente()
 # # # # # trama_recibida = objetoComandos.getTrama(binascii.unhexlify("05"), "201504408")
 # # # trama_chat = objetoComandos.getTrama(b'\x80', str("hola"))
 # # # print("trama chat: " + str(trama_chat))

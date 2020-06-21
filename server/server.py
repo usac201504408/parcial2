@@ -59,7 +59,7 @@ def on_message(client, userdata, msg):
 
     if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
         print("")
-        print("El cliente del topic " + str(msg.topic) + " da el comando ALIVE y dice: " + str(arregloTrama_split[1]))
+        print("El cliente del topic " + str(msg.topic) + " da el comando ALIVE y dice soy: " + str(arregloTrama_split[1]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         trama_ack = comandosCliente.comandosCliente().getTrama(COMMAND_ACK, str(arregloTrama_split[1])) 
         client.publish("comandos/14/" + str(arregloTrama_split[1]), trama_ack, qos = 2, retain = False)
@@ -69,10 +69,15 @@ def on_message(client, userdata, msg):
         # print("El cliente del topic " + str(msg.topic) + "da el comando ACK y dice: " + str(arregloTrama_split[1]))
         # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         pass
-    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): 
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR de cliente
         print("")
-        print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
+        print("El cliente del topic " + str(msg.topic) + " da el comando FTR para enviar a: " + str(arregloTrama_split[1]) + " el tamanio es de: " + str(arregloTrama_split[2]))
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+        #se procede a evaluar si le damos respuesta de NO o de OK
+        #se extrae el remitente del topic
+        remitente = str(msg.topic).split("/")[2]
+        trama_ok = comandosCliente.comandosCliente().getTrama(COMMAND_OK, str(remitente)) 
+        client.publish("comandos/14/" + str(remitente), trama_ok, qos = 2, retain = False)
 
 
   
