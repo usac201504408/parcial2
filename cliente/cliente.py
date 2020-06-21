@@ -17,6 +17,8 @@ logging.basicConfig(
     format = '[%(levelname)s] (%(threadName)-10s) %(message)s'
     )
 
+#variable global de negociacion
+esperandoRespuesta = False
 
 def postAlive():
     while True:
@@ -63,16 +65,19 @@ def on_message(client, userdata, msg):
         # print("El cliente del topic " + str(msg.topic) + " da el comando ACK y dice: " + str(arregloTrama_split[1]))
         # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         pass
-    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR del ciente
-        print("")
-        print(str(msg.topic))
-        print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
-        print(str(msg.topic).split("/"))
-        # pass
-    elif(arregloTrama_split[0].encode() == binascii.unhexlify("06")): #trama FTR del ciente
-        print("")
-        print("El cliente del topic " + str(msg.topic) + " da el comando OK y dice: " + str(arregloTrama_split[1]))
-
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR del ciente      
+        # print("")
+        # print(str(msg.topic))
+        # print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
+        # print(str(msg.topic).split("/"))
+        pass
+    elif(arregloTrama_split[0].encode() == binascii.unhexlify("06")): #trama OK del server
+        #bajo bandera de espera
+        global esperandoRespuesta
+        esperandoRespuesta = False
+        # print("")
+        # print("El cliente del topic " + str(msg.topic) + " da el comando OK y dice: " + str(arregloTrama_split[1]))
+        pass
     
    
 
@@ -86,8 +91,11 @@ client.username_pw_set(MQTT_USER, MQTT_PASS) #Credenciales requeridas por el bro
 client.connect(host=MQTT_HOST, port = MQTT_PORT) #Conectar al servidor remoto
 
 
-#Nos conectaremos a distintos topics:
+#variables globales:
 qos = 2
+
+
+
 #extraer el carnet del cliente conectado -> servira para saber a que topic de comandos pertenece
 usuariosFile = lecturaArchivos.LecturaArchivo("usuario.txt").getArreglo()
 usuario = "" #NUMERO DE CARNET DEL CLIENTE 
@@ -123,8 +131,8 @@ try:
             menu2 = input("¿Que opcion deseas? : ")
             if(menu2 == "1"): #enviar a usuario
                 print("")
-                usuario = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
-                topic = "usuarios/14/" + str(usuario)
+                usuarioChat = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
+                topic = "usuarios/14/" + str(usuarioChat)
                 #lo suscribo al topic
                 client.subscribe((str(topic), qos))
                 while True:
@@ -134,8 +142,8 @@ try:
                     client.publish(topic, trama_chat, qos = 2, retain = False)
             if(menu2 == "2"): #enviar a sala
                 print("")               
-                sala = input("Por favor ingresa la sala donde quieres chatear (S01): ")
-                topic = "salas/14/" + str(sala)
+                salaChat = input("Por favor ingresa la sala donde quieres chatear (S01): ")
+                topic = "salas/14/" + str(salaChat)
                 #lo suscribo al topic
                 client.subscribe((str(topic), qos))
                 while True:
@@ -160,6 +168,12 @@ try:
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
                 #se publica en mqtt
                 client.publish(topic, trama_FTR, qos = 2, retain = False)
+                #se le pide al cliente que espere, levanto bandera
+                esperandoRespuesta = True
+                while esperandoRespuesta == True:                    
+                    pass
+                #me conecto al socket y realizo la transferencia -> MESSI
+                print("Enviando archivo...")
 
 
 
@@ -172,13 +186,20 @@ try:
                 fileSize = 64 * 1024
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(sala), str(fileSize))
                 client.publish(topic, trama_FTR, qos = 2, retain = False)
-
+                #se le pide al cliente que espere, levanto bandera
+                esperandoRespuesta = True
+                while esperandoRespuesta == True:
+                    print("Esperando respuesta del servidor...")
+                    pass
+                #me conecto al socket y realizo la transferencia -> MESSI
+                
 
 
 except KeyboardInterrupt:
     logging.warning("Desconectando del broker...")
 
 finally:
+    esperandoRespuesta = False
     client.loop_stop() #Se mata el hilo que verifica los topics en el fondo
     client.disconnect() #Se desconecta del broker
     logging.info("Desconectado del broker. Saliendo...")

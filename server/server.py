@@ -78,7 +78,8 @@ def on_message(client, userdata, msg):
         remitente = str(msg.topic).split("/")[2]
         trama_ok = comandosCliente.comandosCliente().getTrama(COMMAND_OK, str(remitente)) 
         client.publish("comandos/14/" + str(remitente), trama_ok, qos = 2, retain = False)
-        print("Se envio un comando OK al cliente" + str(remitente))
+        print("Se envio un comando OK al cliente " + str(remitente))
+        #se procede a recibir el archivo del cliente
 
 
   
