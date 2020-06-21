@@ -26,6 +26,7 @@ class comandosCliente(object):
         elif(comando == binascii.unhexlify("06")): #comando para OK
             trama = comando + bytes(separador) + bytes(variable1)
         elif(comando == binascii.unhexlify("02")): #comando para FRR
+            variable2 = variable2.encode()
             trama = comando + bytes(separador) + bytes(variable1) + bytes(separador) + bytes(variable2)
             
             
