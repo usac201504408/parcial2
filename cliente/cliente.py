@@ -55,7 +55,7 @@ def on_publish(client, userdata, mid):
 #Callback que se ejecuta cuando llega un mensaje al topic suscrito
 def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
-    logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
+    logging.info("Ha llegado el mensaje al topic: " + str(msg.topic))
     # mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
     
@@ -79,6 +79,8 @@ def on_message(client, userdata, msg):
         # print("")
         # print("El cliente del topic " + str(msg.topic) + " da el comando OK y dice: " + str(arregloTrama_split[1]))
         pass
+    elif (arregloTrama_split[0].encode() == binascii.unhexlify("08")):
+        print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
     
    
 
