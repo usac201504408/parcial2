@@ -19,12 +19,13 @@ logging.basicConfig(
 
 #variable global de negociacion
 esperandoRespuesta = False
+usuarioCarnet = "" #NUMERO DE CARNET DEL CLIENTE
 
 def postAlive():
     while True:
         #hago un publish para decir que estoy vivo
-        trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, "201504408")       
-        client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
+        trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, usuarioCarnet)       
+        client.publish("comandos/14/" + str(usuarioCarnet), trama, qos = 2, retain = False)
         time.sleep(20)
 
 
@@ -98,9 +99,10 @@ qos = 2
 
 #extraer el carnet del cliente conectado -> servira para saber a que topic de comandos pertenece
 usuariosFile = lecturaArchivos.LecturaArchivo("usuario.txt").getArreglo()
-usuario = "" #NUMERO DE CARNET DEL CLIENTE 
+ 
 for usuario in usuariosFile:
     topic = "comandos/14/" + str(usuario)
+    usuarioCarnet = str(usuario)
     client.subscribe((str(topic), qos))
 #suscribirse a todos los topics del archivo
 topics = lecturaArchivos.LecturaArchivo("topics.txt").getArreglo()
@@ -162,7 +164,7 @@ try:
                 print("")
                 duracion = input("¿Que duracion tendra el audio? : ")
                 usuarioEnvio = input("Por favor ingresa el carnet del usuario al que deseas enviar el audio: ")
-                topic = "comandos/14/" + usuario
+                topic = "comandos/14/" + usuarioCarnet
                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
                 fileSize = 64 * 1024
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
@@ -181,7 +183,7 @@ try:
                 print("")
                 duracion = input("¿Que duracion tendra el audio? : ")
                 sala = input("Por favor ingresa el nombre de la sala a la que deseas enviar el audio: ")
-                topic = "comandos/14/" + usuario
+                topic = "comandos/14/" + usuarioCarnet
                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
                 fileSize = 64 * 1024
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(sala), str(fileSize))
