@@ -31,12 +31,30 @@ def negociacionRedireccion(destinatario, fileSize, nombreFile):
     if(str(destinatario).isdigit() == True): #es un carnet
         trama_redireccion = comandosCliente.comandosCliente().getTrama(COMMAND_FRR,destinatario,fileSize)
         client.publish("comandos/14/" + str(destinatario), trama_redireccion, qos = 2, retain = False)
-        print("Enviando comando FRR al cliente destino " + str(destinatario) + "nombre archivo: " + str(nombreFile) + " de tamanio " + str(fileSize))
+        print("Enviando comando FRR al cliente destino " + str(destinatario) + " nombre archivo: " + str(nombreFile) + " de tamanio " + str(fileSize))
+        #se empieza la transferencia
         pass
     else: #es una sala, tengo que enciclar hasta mandar a todos, revisando quienes estan en esa sala
         #con el archivo de listado de personas asignadas a salas
-       
-        pass
+        usuariosRegistrados = lecturaArchivos.LecturaArchivo("usuarios.txt").getArreglo()
+        for usuarioDestino in usuariosRegistrados:
+            #recorro cada item del arreglo para ver si le toca recibir el archivo o no
+            #verifico en todas las salas que tenga asignadas
+            objetoUsuario = usuarioDestino.split(",") 
+            carnetDestino = objetoUsuario[0]
+            longitud = len(objetoUsuario)
+            #si la longitud es mayor a dos, la persona esta asignada a alguna sala, si no no.
+            if(longitud >= 2):
+                for index in range(2,longitud - 1):
+                    #voy verificando si la sala que tiene asignada es la destino
+                    salaAsignada = objetoUsuario[index]
+                    print("sala asignada de " + str(carnetDestino) + " es : " + str(salaAsignada))
+                    if(salaAsignada == destinatario):
+                        #si tiene asignada la sala, entonces le envio la trama        
+                        trama_redireccion = comandosCliente.comandosCliente().getTrama(COMMAND_FRR,str(carnetDestino),fileSize)
+                        client.publish("comandos/14/" + str(carnetDestino), trama_redireccion, qos = 2, retain = False)
+                        print("Enviando comando FRR al cliente destino " + str(carnetDestino) + " nombre archivo: " + str(nombreFile) + " de tamanio " + str(fileSize))
+        print("termino de enviar a todos los usuarios en la sala")
         
 
 
