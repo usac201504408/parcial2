@@ -4,6 +4,7 @@ ALIVE_CONTINUOUS = 0.1 #JPGM Período entre envío de tramas ALIVE si no hay res
 #JPGM COMMANDS
 COMMAND_CHAT = b'\x08'
 COMMAND_FTR = b'\x03'
+COMMAND_FRR = b'\x02'
 COMMAND_ALIVE = b'\x04'
 COMMAND_ACK = b'\x05'
 COMMAND_OK = b'\x06'

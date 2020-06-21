@@ -55,8 +55,6 @@ def on_publish(client, userdata, mid):
 #Callback que se ejecuta cuando llega un mensaje al topic suscrito
 def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
-    # logging.info("Ha llegado el mensaje al topic: " + str(msg.topic))
-    # mensajedecode =  msg.payload.decode()
     arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
     
     if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
@@ -67,20 +65,17 @@ def on_message(client, userdata, msg):
         # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         pass
     elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR del ciente      
-        # print("")
-        # print(str(msg.topic))
-        # print("El cliente del topic " + str(msg.topic) + " da el comando FTR y dice: " + str(arregloTrama_split[1]))
-        # print(str(msg.topic).split("/"))
         pass
     elif(arregloTrama_split[0].encode() == binascii.unhexlify("06")): #trama OK del server
         #bajo bandera de espera
         global esperandoRespuesta
-        esperandoRespuesta = False
-        # print("")
-        # print("El cliente del topic " + str(msg.topic) + " da el comando OK y dice: " + str(arregloTrama_split[1]))
+        esperandoRespuesta = False    
         pass
     elif (arregloTrama_split[0].encode() == binascii.unhexlify("08")):
         print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
+    elif (arregloTrama_split[0].encode() == binascii.unhexlify("02")): #trama FRR file receive request
+        #conectarme al socket para recibir archivo MESSI
+        pass
     
    
 

@@ -26,6 +26,18 @@ def postAlive():
         # client.publish("comandos/14/201504408", trama, qos = 2, retain = False)
         time.sleep(20)
 
+def negociacionRedireccion(destinatario, fileSize, nombreFile):
+    
+    if(str(destinatario).isdigit() == True): #es un carnet
+        trama_redireccion = comandosCliente.comandosCliente().getTrama(COMMAND_FRR,destinatario,fileSize)
+        client.publish("comandos/14/" + str(destinatario), trama_redireccion, qos = 2, retain = False)
+        pass
+    else: #es una sala, tengo que enciclar hasta mandar a todos, revisando quienes estan en esa sala
+        #con el archivo de listado de personas asignadas a salas
+       
+        pass
+        
+
 
 #Handler en caso suceda la conexion con el broker MQTT
 def on_connect(client, userdata, flags, rc): 
@@ -84,7 +96,17 @@ def on_message(client, userdata, msg):
         trama_ok = comandosCliente.comandosCliente().getTrama(COMMAND_OK, str(remitente)) 
         client.publish("comandos/14/" + str(remitente), trama_ok, qos = 2, retain = False)
         print("Se envio un comando OK al cliente " + str(remitente))
-        #se procede a recibir el archivo del cliente
+        #se procede a recibir el archivo del cliente MESSI
+        #luego de recibirlo procedo a hacer la negociacion con el destinatario, inicio un hilo
+        nombreFile = "archivo.wav"
+        destinatario = arregloTrama_split[1]
+        tamanioFile =  arregloTrama_split[2]
+        t2 = threading.Thread(name = 'Contador de 1 segundo',
+                            target = negociacionRedireccion,
+                            args = ((str(destinatario), str(tamanioFile), str(nombreFile))),
+                            daemon = True
+                        )
+        t2.start()
 
 
   
