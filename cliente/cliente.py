@@ -75,7 +75,7 @@ def on_message(client, userdata, msg):
         print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
     elif (arregloTrama_split[0].encode() == binascii.unhexlify("02")): #trama FRR file receive request
         #conectarme al socket para recibir archivo MESSI
-        print("Cliente conectandose a SOCKET para recibir archivo")
+        print("Cliente conectandose a SOCKET para recibir archivo ")
         pass
     
    

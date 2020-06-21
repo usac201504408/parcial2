@@ -31,7 +31,7 @@ def negociacionRedireccion(destinatario, fileSize, nombreFile):
     if(str(destinatario).isdigit() == True): #es un carnet
         trama_redireccion = comandosCliente.comandosCliente().getTrama(COMMAND_FRR,destinatario,fileSize)
         client.publish("comandos/14/" + str(destinatario), trama_redireccion, qos = 2, retain = False)
-        print("Enviando comando FRR al cliente")
+        print("Enviando comando FRR al cliente destino " + str(destinatario) + "nombre archivo: " + str(nombreFile) + " de tamanio " + str(fileSize))
         pass
     else: #es una sala, tengo que enciclar hasta mandar a todos, revisando quienes estan en esa sala
         #con el archivo de listado de personas asignadas a salas
