@@ -45,7 +45,7 @@ def negociacionRedireccion(destinatario, fileSize, nombreFile):
             longitud = len(objetoUsuario)
             #si la longitud es mayor a dos, la persona esta asignada a alguna sala, si no no.
             if(longitud >= 2):
-                for index in range(2,longitud - 1):
+                for index in range(2,longitud):
                     #voy verificando si la sala que tiene asignada es la destino
                     salaAsignada = objetoUsuario[index]
                     print("sala asignada de " + str(carnetDestino) + " es : " + str(salaAsignada))
