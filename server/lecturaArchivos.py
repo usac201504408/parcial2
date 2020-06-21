@@ -14,6 +14,12 @@ class LecturaArchivo(object):
         archivo.close()
         return datos
 
+    def escribirArreglo(self, valor):
+        archivo = open(self.nombreArchivo, 'a')
+        textoAppend = str(valor) + "\n"
+        archivo.write(textoAppend)
+        archivo.close()
+
 
 #Ejemplo de consumo de la clase
 # nuevoarreglo = LecturaArchivo("topics.txt").getArreglo()

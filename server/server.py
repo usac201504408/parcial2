@@ -9,6 +9,7 @@ import lecturaArchivos
 import comandosCliente
 import threading
 import binascii
+import alive
 
 
 #Configuracion inicial de logging
@@ -63,7 +64,11 @@ def on_message(client, userdata, msg):
         logging.debug("El contenido del mensaje es: " + str(mensajedecode))
         trama_ack = comandosCliente.comandosCliente().getTrama(COMMAND_ACK, str(arregloTrama_split[1])) 
         client.publish("comandos/14/" + str(arregloTrama_split[1]), trama_ack, qos = 2, retain = False)
-    
+        #procedo a guardar a la lista de vivos al cliente
+        remitente = str(msg.topic).split("/")[2]
+        alive.alives().usuarioAlive(remitente)
+
+
     elif(arregloTrama_split[0].encode() == binascii.unhexlify("05")): #acknowledge del server
         # print("")
         # print("El cliente del topic " + str(msg.topic) + "da el comando ACK y dice: " + str(arregloTrama_split[1]))
