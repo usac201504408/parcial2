@@ -170,12 +170,33 @@ try:
 
                 #empiezo a grabar el audio
 
-                 #publico en topic de audios
+                #  #publico en topic de audios
+                # topic_audios = "audio/14/" + sala
+                # fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
+                # with open('prueba.mp3', 'rb') as archivo:
+                #     trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(sala), str(archivo))
+                #     clienteMain.publicar(topic_audios, trama_FRR)
+                #publico en topic de audios
                 topic_audios = "audio/14/" + sala
-                fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
-                with open('prueba.mp3', 'rb') as archivo:
-                    trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(sala), str(archivo))
-                    clienteMain.publicar(topic_audios, trama_FRR)
+                os.system('arecord -d '+duracion+' -f U8 -r 8000 ../cliente/tempFiles/enviar.mp3')
+                #ESTO SI FUNCIONA, NO FUNCIONA AL DEJARLO EN OTRA CLASE VERIFICAR POR QUE Y VER POR QUE NO PUBLICA EN EL TOPIC BIEN
+                in_file = open("../cliente/tempFiles/enviar.mp3", "rb") 
+                data = in_file.read() 
+                in_file.close()
+                # print(data)
+
+                # out_file = open("recibido.mp3", "wb") 
+                # out_file.write(data)
+                # out_file.close()
+                # print(data)
+                # print("ya leyo")
+                # #se manda la data binaria
+                # print(type(data))
+                #trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(data))
+                #trama_FRR = comandosCliente.comandosCliente().getTrama("", str(data))
+                # print(trama_FRR)
+                data = bytearray(data)
+                clienteMain.publicar(topic_audios, data)
         
         
         if(menu1 == "3"): #quiere salir
