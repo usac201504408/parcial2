@@ -20,9 +20,16 @@ class LecturaArchivo(object):
         archivo.write(textoAppend)
         archivo.close()
 
+    def getBytes(self):
+        audio = bytes
+        archivo = open(self.nombreArchivo, 'rb')
+        audio = archivo
+        archivo.close()
+        return audio
+
 
 #Ejemplo de consumo de la clase
-# nuevoarreglo = LecturaArchivo("usuario.txt").getArreglo()
+# nuevoarreglo = LecturaArchivo("prueba.mp3").getBytes()
 # print(nuevoarreglo)
      
 

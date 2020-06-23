@@ -3,6 +3,7 @@ import lecturaArchivos
 import comandosCliente
 from broker import *
 from globalconst import *
+import os
 
 ###empieza codigo de consumo de la clase
 #variables globales:
@@ -103,8 +104,10 @@ try:
                 #empiezo a grabar el audio
 
                 #publico en topic de audios
-                topic_audios = "audio/14/" + usuarioCarnet
-                fileBinarios = "enviandoaudio"
+                topic_audios = "audio/14/" + usuarioEnvio
+                #PENDIENTE GRABAR EL AUDIO Y GUARDARLO
+                # os.system('arecord -d '+duracion+' -f U8 -r 8000 prueba.mp3')
+                fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
                 trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(fileBinarios))
                 clienteprueba.publicar(topic_audios, trama_FRR)
 
@@ -133,7 +136,7 @@ try:
 
                  #publico en topic de audios
                 topic_audios = "audio/14/" + sala
-                fileBinarios = "enviandoaudio"
+                fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
                 trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(sala), str(fileBinarios))
                 clienteprueba.publicar(topic_audios, trama_FRR)
         

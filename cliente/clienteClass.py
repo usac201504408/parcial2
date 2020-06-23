@@ -7,6 +7,7 @@ import logging
 import threading
 import time
 import lecturaArchivos
+import os
 
 class clienteClass(object):
 
@@ -20,6 +21,11 @@ class clienteClass(object):
             trama = comandosCliente.comandosCliente().getTrama(COMMAND_ALIVE, self.usuarioCliente)       
             self.client.publish("comandos/14/" + str(self.usuarioCliente), trama, qos = 2, retain = False)
             time.sleep(20)
+
+    def hiloAudio(self):
+        #RECIBIR EL ARCHIVO EN EL PARAMETRO ESTA PENDIENTE
+        os.system('aplay prueba.mp3')
+
 
 
     #Handler en caso suceda la conexion con el broker MQTT
@@ -65,7 +71,16 @@ class clienteClass(object):
 
             #PARCIAL 2, RECIBIR DE MQTT EL ARCHIVO, se extrae de la trama 2 el valor
             print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
-            pass 
+            #reproduzco el audio en hilo
+            # archivoAudio = arregloTrama_split[2]
+            self.t2 = threading.Thread(name = 'Contador de 1 segundo',
+                                target = self.hiloAudio,
+                                args = (()),
+                                daemon = True
+                            )
+            self.t2.start()
+
+             
 
     #Handler en caso se publique satisfactoriamente en el broker MQTT
     def on_publish(self, client, userdata, mid): 
