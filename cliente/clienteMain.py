@@ -118,19 +118,20 @@ try:
 
 
                 #ESTO SI FUNCIONA, NO FUNCIONA AL DEJARLO EN OTRA CLASE VERIFICAR POR QUE Y VER POR QUE NO PUBLICA EN EL TOPIC BIEN
-                in_file = open("prueba.mp3", "rb") # opening for [r]eading as [b]inary
-                data = in_file.read() # if you only wanted to read 512 bytes, do .read(512)
+                in_file = open("prueba.mp3", "rb") 
+                data = in_file.read() 
                 in_file.close()
                 # print(data)
 
-                out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
-                out_file.write(data)
-                out_file.close()
+                # out_file = open("recibido.mp3", "wb") 
+                # out_file.write(data)
+                # out_file.close()
+                print(data)
 
-                
+                #se manda la data binaria
                 trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(data))
                
-                clienteMain.publicar(topic_audios, bytes(trama_FRR))
+                clienteMain.publicar(topic_audios, str(trama_FRR))
 
 
 

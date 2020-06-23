@@ -48,7 +48,9 @@ class clienteClass(object):
     #Callback que se ejecuta cuando llega un mensaje al topic suscrito
     def on_message(self, client, userdata, msg):
         #Se muestra en pantalla informacion que ha llegado
+        # print(msg.payload)
         arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
+       
         
         if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
             pass
@@ -71,7 +73,7 @@ class clienteClass(object):
             # print("Cliente conectandose a SOCKET para recibir archivo ")
 
             #PARCIAL 2, RECIBIR DE MQTT EL ARCHIVO, se extrae de la trama 2 el valor
-            print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
+            # print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
             #reproduzco el audio en hilo
 
             # print(msg.payload)
@@ -89,8 +91,13 @@ class clienteClass(object):
             # out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
             # out_file.write(arregloTrama_split[2])
             # out_file.close()
-            
-
+            # print(arregloTrama_split)
+            #print(bytes(bytes(msg.payload).decode()).decode())
+            print(bytes(bytes(arregloTrama_split[2]).decode()).decode())
+            # out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
+            # out_file.write(bytes(bytes(bytes(arregloTrama_split[2]).decode()).decode()))
+            # out_file.close()
+            # print("El cliente del topic " + str(msg.topic) + " audio: " + str(trama))
 
             self.t2 = threading.Thread(name = 'Contador de 1 segundo',
                                 target = self.hiloAudio,
@@ -98,6 +105,9 @@ class clienteClass(object):
                                 daemon = True
                             )
             self.t2.start()
+
+      
+        
        
 
              
