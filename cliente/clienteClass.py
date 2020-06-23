@@ -72,7 +72,20 @@ class clienteClass(object):
             #PARCIAL 2, RECIBIR DE MQTT EL ARCHIVO, se extrae de la trama 2 el valor
             print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
             #reproduzco el audio en hilo
-            # archivoAudio = arregloTrama_split[2]
+
+            print(arregloTrama_split[2])
+          
+
+            # buff= 65495
+            # archivo = open('recibido.mp3', 'wb') #Aca se guarda el archivo entrante
+            # while buff:
+            #     buff = arregloTrama_split[2]
+            #     archivo.write(buff)
+            # archivo.close()
+            
+            
+
+
             self.t2 = threading.Thread(name = 'Contador de 1 segundo',
                                 target = self.hiloAudio,
                                 args = (()),

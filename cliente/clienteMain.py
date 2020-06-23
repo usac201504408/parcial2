@@ -137,8 +137,9 @@ try:
                  #publico en topic de audios
                 topic_audios = "audio/14/" + sala
                 fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
-                trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(sala), str(fileBinarios))
-                clienteprueba.publicar(topic_audios, trama_FRR)
+                with open('prueba.mp3', 'rb') as archivo:
+                    trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(sala), str(archivo))
+                    clienteprueba.publicar(topic_audios, trama_FRR)
         
         
         if(menu1 == "3"): #quiere salir
