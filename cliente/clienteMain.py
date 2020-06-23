@@ -24,6 +24,7 @@ clienteprueba.conectarMQTT()
 clienteprueba.iniciarLoggin()
 #suscribirse a todos los topics del archivo
 topics = lecturaArchivos.LecturaArchivo("topics.txt").getArreglo()
+
 for topic in topics:
     clienteprueba.suscribirse(topic)
 
@@ -116,7 +117,15 @@ try:
             if(menu2 == "2"): #enviar a sala
                 print("")
                 duracion = input("¿Que duracion tendra el audio? : ")
-                sala = input("Por favor ingresa el nombre de la sala a la que deseas enviar el audio: ")
+                #pintar las salas
+                opcionesSala = lecturaArchivos.LecturaArchivo("salas.txt").getArreglo()
+                print("")
+                print("Salas disponibles")
+                for item_sala in opcionesSala:
+                    print(item_sala)
+
+                print("")
+                sala = input("¿A que sala deseas enviar tu audio? :  ")
                 topic = "comandos/14/" + usuarioCarnet
                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
                 fileSize = 64 * 1024
