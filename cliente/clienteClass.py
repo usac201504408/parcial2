@@ -78,7 +78,8 @@ class clienteClass(object):
                 esperandoRespuesta = False    
                 pass
             elif (arregloTrama_split[0].encode() == binascii.unhexlify("08")):
-                print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
+                logging.info("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
+                # print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
             elif (arregloTrama_split[0].encode() == binascii.unhexlify("02")): #trama FRR file receive request
                 #conectarme al socket para recibir archivo MESSI
                 # print("Cliente conectandose a SOCKET para recibir archivo ")
@@ -157,12 +158,15 @@ class clienteClass(object):
         self.client.connect(host=MQTT_HOST, port = MQTT_PORT) #Conectar al servidor remoto
         
 
+    def logginWriteInfo(self, mensaje):
+        logging.info(mensaje)  
 
     def iniciarLoggin(self):
         logging.basicConfig(
         level = logging.INFO, 
-        format = '[%(levelname)s] (%(threadName)-10s) %(message)s'
-        )   
+        format = '\n \n [%(levelname)s]  %(message)s \n \n'
+        )  
+        
 
     def publicar(self, topic, trama):
         self.client.publish(topic, trama, qos = 2, retain = False)

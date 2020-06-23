@@ -68,7 +68,8 @@ try:
                 #pintar las salas
                 opcionesSala = lecturaArchivos.LecturaArchivo("salas.txt").getArreglo()
                 print("")
-                print("Salas disponibles")
+                clienteMain.logginWriteInfo("Salas disponibles")
+                # print("Salas disponibles")
                 for item_sala in opcionesSala:
                     print(item_sala)
 
@@ -147,7 +148,8 @@ try:
                 #pintar las salas
                 opcionesSala = lecturaArchivos.LecturaArchivo("salas.txt").getArreglo()
                 print("")
-                print("Salas disponibles")
+                clienteMain.logginWriteInfo("Salas disponibles")
+                # print("Salas disponibles")
                 for item_sala in opcionesSala:
                     print(item_sala)
 
@@ -204,18 +206,21 @@ try:
             clienteMain.pararLoop() #Se mata el hilo que verifica los topics en el fondo
             clienteMain.desconectarBroker() #Se desconecta del broker
             # logging.info("Desconectado del broker. Saliendo...")
-            print("Desconectado del broker. Saliendo...")
+            clienteMain.logginWriteInfo("Desconectado del broker. Saliendo...") 
+            # print("Desconectado del broker. Saliendo...")
             break
                 
 
 
 except KeyboardInterrupt:
     # logging.warning("Desconectando del broker...")
-    print("Desconectando del broker...")
+    clienteMain.logginWriteInfo("Desconectando del broker...")
+    # print("Desconectando del broker...")
 
 finally:
     esperandoRespuesta = False
     clienteMain.pararLoop() #Se mata el hilo que verifica los topics en el fondo
     clienteMain.desconectarBroker() #Se desconecta del broker
     # logging.info("Desconectado del broker. Saliendo...")
-    print("Desconectado del broker. Saliendo...")
+    clienteMain.logginWriteInfo("Desconectado del broker. Saliendo...")
+    # print("Desconectado del broker. Saliendo...")
