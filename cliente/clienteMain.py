@@ -95,12 +95,15 @@ try:
                 print("")
                 duracion = input("¿Que duracion tendra el audio? : ")
                 usuarioEnvio = input("Por favor ingresa el carnet del usuario al que deseas enviar el audio: ")
+               
                 topic = "comandos/14/" + usuarioCarnet
                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
                 fileSize = 64 * 1024
+               
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
                 #se publica en mqtt
                 # client.publish(topic, trama_FTR, qos = 2, retain = False)
+               
                 clienteMain.publicar(topic, trama_FTR)
                 #se le pide al cliente que espere, levanto bandera
                 #INICIO SE COMENTA CODIGO PARA SERVER
@@ -126,12 +129,15 @@ try:
                 # out_file = open("recibido.mp3", "wb") 
                 # out_file.write(data)
                 # out_file.close()
-                print(data)
-
-                #se manda la data binaria
-                trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(data))
-               
-                clienteMain.publicar(topic_audios, str(trama_FRR))
+                # print(data)
+                # print("ya leyo")
+                # #se manda la data binaria
+                # print(type(data))
+                #trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(data))
+                #trama_FRR = comandosCliente.comandosCliente().getTrama("", str(data))
+                # print(trama_FRR)
+                data = bytearray(data)
+                clienteMain.publicar(topic_audios, data)
 
 
 

@@ -49,63 +49,84 @@ class clienteClass(object):
     def on_message(self, client, userdata, msg):
         #Se muestra en pantalla informacion que ha llegado
         # print(msg.payload)
-        arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
-       
-        
-        if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
-            pass
-        elif(arregloTrama_split[0].encode() == binascii.unhexlify("05")): #acknowledge del server
-            # print("")
-            # print("El cliente del topic " + str(msg.topic) + " da el comando ACK y dice: " + str(arregloTrama_split[1]))
-            # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
-            pass
-        elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR del ciente      
-            pass
-        elif(arregloTrama_split[0].encode() == binascii.unhexlify("06")): #trama OK del server
-            #bajo bandera de espera
-            global esperandoRespuesta
-            esperandoRespuesta = False    
-            pass
-        elif (arregloTrama_split[0].encode() == binascii.unhexlify("08")):
-            print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
-        elif (arregloTrama_split[0].encode() == binascii.unhexlify("02")): #trama FRR file receive request
-            #conectarme al socket para recibir archivo MESSI
-            # print("Cliente conectandose a SOCKET para recibir archivo ")
+        # print("llego")
+        # print(msg.payload)
+        # print(type(msg.payload))
 
-            #PARCIAL 2, RECIBIR DE MQTT EL ARCHIVO, se extrae de la trama 2 el valor
-            # print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
-            #reproduzco el audio en hilo
+        #obtener que topic es
+        splitTopic = str(msg.topic).split("/")
+        print(splitTopic)
+        topicBase = splitTopic[0]
 
-            # print(msg.payload)
-          
-
-            # buff= 65495
-            # archivo = open('recibido.mp3', 'wb') #Aca se guarda el archivo entrante
-            # while buff:
-            #     buff = arregloTrama_split[2]
-            #     archivo.write(buff)
-            # archivo.close()
-            # archivo = open('recibido.mp3', 'wb')
-            # archivo.write(arregloTrama_split[2])
-            # archivo.close()
-            # out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
-            # out_file.write(arregloTrama_split[2])
-            # out_file.close()
+        if(topicBase != "audio"):
+                
+            arregloTrama_split = comandosCliente.comandosCliente().splitTramaCliente(msg.payload)
             # print(arregloTrama_split)
-            #print(bytes(bytes(msg.payload).decode()).decode())
-            print(bytes(bytes(arregloTrama_split[2]).decode()).decode())
-            # out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
-            # out_file.write(bytes(bytes(bytes(arregloTrama_split[2]).decode()).decode()))
-            # out_file.close()
-            # print("El cliente del topic " + str(msg.topic) + " audio: " + str(trama))
+            
+            if(arregloTrama_split[0].encode() == binascii.unhexlify("04")): #alive no muestro al cliente
+                pass
+            elif(arregloTrama_split[0].encode() == binascii.unhexlify("05")): #acknowledge del server
+                # print("")
+                # print("El cliente del topic " + str(msg.topic) + " da el comando ACK y dice: " + str(arregloTrama_split[1]))
+                # logging.debug("El contenido del mensaje es: " + str(mensajedecode))
+                pass
+            elif(arregloTrama_split[0].encode() == binascii.unhexlify("03")): #trama FTR del ciente      
+                pass
+            elif(arregloTrama_split[0].encode() == binascii.unhexlify("06")): #trama OK del server
+                #bajo bandera de espera
+                global esperandoRespuesta
+                esperandoRespuesta = False    
+                pass
+            elif (arregloTrama_split[0].encode() == binascii.unhexlify("08")):
+                print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
+            elif (arregloTrama_split[0].encode() == binascii.unhexlify("02")): #trama FRR file receive request
+                #conectarme al socket para recibir archivo MESSI
+                # print("Cliente conectandose a SOCKET para recibir archivo ")
 
-            self.t2 = threading.Thread(name = 'Contador de 1 segundo',
-                                target = self.hiloAudio,
-                                args = (()),
-                                daemon = True
-                            )
-            self.t2.start()
+                #PARCIAL 2, RECIBIR DE MQTT EL ARCHIVO, se extrae de la trama 2 el valor
+                # print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
+                #reproduzco el audio en hilo
 
+                # print(msg.payload)
+            
+
+                # buff= 65495
+                # archivo = open('recibido.mp3', 'wb') #Aca se guarda el archivo entrante
+                # while buff:
+                #     buff = arregloTrama_split[2]
+                #     archivo.write(buff)
+                # archivo.close()
+                # archivo = open('recibido.mp3', 'wb')
+                # archivo.write(arregloTrama_split[2])
+                # archivo.close()
+                # out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
+                # out_file.write(arregloTrama_split[2])
+                # out_file.close()
+                # print(arregloTrama_split)
+                #print(bytes(bytes(msg.payload).decode()).decode())
+                print(bytes(bytes(arregloTrama_split[2]).decode()).decode())
+                # out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
+                # out_file.write(bytes(bytes(bytes(arregloTrama_split[2]).decode()).decode()))
+                # out_file.close()
+                # print("El cliente del topic " + str(msg.topic) + " audio: " + str(trama))
+
+                self.t2 = threading.Thread(name = 'Contador de 1 segundo',
+                                    target = self.hiloAudio,
+                                    args = (()),
+                                    daemon = True
+                                )
+                self.t2.start()
+        else:#es audio por mqtt
+            # print(arregloTrama_split[0])
+            # print(type(arregloTrama_split[0]))
+            # bytesArchivo = bytes(msg.payload)
+            # print(type(bytesArchivo))
+            print(msg.payload)
+            print(type(msg.payload))
+            out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
+            out_file.write(msg.payload)
+            out_file.close()
+            
       
         
        
