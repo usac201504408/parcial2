@@ -25,7 +25,7 @@ class clienteClass(object):
 
     def hiloAudio(self):
         #JPGM RECIBIR EL ARCHIVO EN EL PARAMETRO ESTA PENDIENTE
-        os.system('aplay ../cliente/tempFiles/recibido.mp3')
+        os.system('aplay ../cliente/tempFiles/recibido.wav')
 
 
 
@@ -91,7 +91,7 @@ class clienteClass(object):
         else:#es audio por mqtt
 
             #guardo el archivo y luego llamo al hilo
-            nombreArchivo = "../cliente/tempFiles/recibido.mp3"
+            nombreArchivo = "../cliente/tempFiles/recibido.wav"
             out_file = open(nombreArchivo, "wb") # open for [w]riting as [b]inary
             out_file.write(msg.payload)
             out_file.close()

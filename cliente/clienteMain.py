@@ -116,9 +116,9 @@ try:
                 topic_audios = "audio/14/" + usuarioEnvio
                 #PENDIENTE GRABAR EL AUDIO Y GUARDARLO
 
-                os.system('arecord -d '+duracion+' -f U8 -r 8000 ../cliente/tempFiles/enviar.mp3')
+                os.system('arecord -d '+duracion+' -f U8 -r 8000 ../cliente/tempFiles/enviar.wav')
                 #ESTO SI FUNCIONA, NO FUNCIONA AL DEJARLO EN OTRA CLASE VERIFICAR POR QUE Y VER POR QUE NO PUBLICA EN EL TOPIC BIEN
-                in_file = open("../cliente/tempFiles/enviar.mp3", "rb") 
+                in_file = open("../cliente/tempFiles/enviar.wav", "rb") 
                 data = in_file.read() 
                 in_file.close()
                 # print(data)
@@ -168,9 +168,9 @@ try:
 
                 #publico en topic de audios
                 topic_audios = "audio/14/" + sala
-                os.system('arecord -d '+duracion+' -f U8 -r 8000 ../cliente/tempFiles/enviar.mp3')
+                os.system('arecord -d '+duracion+' -f U8 -r 8000 ../cliente/tempFiles/enviar.wav')
                 #ESTO SI FUNCIONA, NO FUNCIONA AL DEJARLO EN OTRA CLASE VERIFICAR POR QUE Y VER POR QUE NO PUBLICA EN EL TOPIC BIEN
-                in_file = open("../cliente/tempFiles/enviar.mp3", "rb") 
+                in_file = open("../cliente/tempFiles/enviar.wav", "rb") 
                 data = in_file.read() 
                 in_file.close()
                 # print(data)
