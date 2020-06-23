@@ -61,7 +61,10 @@ class clienteClass(object):
             print("El cliente del topic " + str(msg.topic) + " da el comando CHAT y dice: " + str(arregloTrama_split[1]))
         elif (arregloTrama_split[0].encode() == binascii.unhexlify("02")): #trama FRR file receive request
             #conectarme al socket para recibir archivo MESSI
-            print("Cliente conectandose a SOCKET para recibir archivo ")
+            # print("Cliente conectandose a SOCKET para recibir archivo ")
+
+            #PARCIAL 2, RECIBIR DE MQTT EL ARCHIVO, se extrae de la trama 2 el valor
+            print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
             pass 
 
     #Handler en caso se publique satisfactoriamente en el broker MQTT
@@ -104,123 +107,123 @@ class clienteClass(object):
 
 
 
-###empieza codigo de consumo de la clase
-#variables globales:
-qos = 2
-#extraer el carnet del cliente conectado -> servira para saber a que topic de comandos pertenece
-usuariosFile = lecturaArchivos.LecturaArchivo("usuario.txt").getArreglo()
-#se instancia la clase
-clienteprueba = clienteClass("201504408")
-clienteprueba.conectarMQTT()
-clienteprueba.iniciarLoggin()
-#suscribirse a todos los topics del archivo
-topics = lecturaArchivos.LecturaArchivo("topics.txt").getArreglo()
-for topic in topics:
-    clienteprueba.suscribirse(topic)
+# ###empieza codigo de consumo de la clase
+# #variables globales:
+# qos = 2
+# #extraer el carnet del cliente conectado -> servira para saber a que topic de comandos pertenece
+# usuariosFile = lecturaArchivos.LecturaArchivo("usuario.txt").getArreglo()
+# #se instancia la clase
+# clienteprueba = clienteClass("201504408")
+# clienteprueba.conectarMQTT()
+# clienteprueba.iniciarLoggin()
+# #suscribirse a todos los topics del archivo
+# topics = lecturaArchivos.LecturaArchivo("topics.txt").getArreglo()
+# for topic in topics:
+#     clienteprueba.suscribirse(topic)
 
-clienteprueba.iniciarLoop()
+# clienteprueba.iniciarLoop()
 
-#inicia loop principal
-esperandoRespuesta = False
-usuarioCarnet = "201504408" #NUMERO DE CARNET DEL CLIENTE
-
-
-
-#El thread de MQTT queda en el fondo, mientras en el main loop hacemos otra cosa
-try:
-    while True:
-        # logging.info("Esperando comando")
-        print("Hola, bienvenido al chat del grupo 14, and i'll tell you all about it when i see you again")
-        print("Menu")
-        print("1. Enviar texto")
-        print("2. Enviar mensaje de voz")
-        print("3.  Salir")
-        print("")
-        menu1 = input("¿Que opcion deseas? : ")  
-        if(menu1 == "1"): #quiere enviar texto
-            print("")
-            print("    1. Enviar a usuario")
-            print("    2. Enviar a sala")
-            print("")
-            menu2 = input("¿Que opcion deseas? : ")
-            if(menu2 == "1"): #enviar a usuario
-                print("")
-                usuarioChat = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
-                topic = "usuarios/14/" + str(usuarioChat)
-                #lo suscribo al topic
-                clienteprueba.suscribirse(topic)
-                while True:
-                    chat = input("Ingresa un mensaje: ")
-                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
-                    # print("trama chat: " + str(trama_chat))
-                    # client.publish(topic, trama_chat, qos = 2, retain = False)
-                    clienteprueba.publicar(topic, trama_chat)
-            if(menu2 == "2"): #enviar a sala
-                print("")               
-                salaChat = input("Por favor ingresa la sala donde quieres chatear (S01): ")
-                topic = "salas/14/" + str(salaChat)
-                #lo suscribo al topic
-                # client.subscribe((str(topic), qos))
-                clienteprueba.suscribirse(topic)
-                while True:
-                    chat = input("Ingresa un mensaje: ")
-                    trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
-                    # print("trama chat: " + str(trama_chat))
-                    # client.publish(topic, trama_chat, qos = 2, retain = False)
-                    clienteprueba.publicar(topic, trama_chat)
-
-        if(menu1 == "2"): #quiere enviar o recibir archivos
-            print("")
-            print("    1. Enviar a usuario")
-            print("    2. Enviar a sala")
-            print("")
-            menu2 = input("¿Que opcion deseas? : ")
-            if(menu2 == "1"): #enviar a usuario
-                print("")
-                duracion = input("¿Que duracion tendra el audio? : ")
-                usuarioEnvio = input("Por favor ingresa el carnet del usuario al que deseas enviar el audio: ")
-                topic = "comandos/14/" + usuarioCarnet
-                #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
-                fileSize = 64 * 1024
-                trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
-                #se publica en mqtt
-                # client.publish(topic, trama_FTR, qos = 2, retain = False)
-                clienteprueba.publicar(topic, trama_FTR)
-                #se le pide al cliente que espere, levanto bandera
-                esperandoRespuesta = True
-                while esperandoRespuesta == True:                    
-                    pass
-                #me conecto al socket y realizo la transferencia -> MESSI
-                print("Enviando archivo...")
+# #inicia loop principal
+# esperandoRespuesta = False
+# usuarioCarnet = "201504408" #NUMERO DE CARNET DEL CLIENTE
 
 
 
-            if(menu2 == "2"): #enviar a sala
-                print("")
-                duracion = input("¿Que duracion tendra el audio? : ")
-                sala = input("Por favor ingresa el nombre de la sala a la que deseas enviar el audio: ")
-                topic = "comandos/14/" + usuarioCarnet
-                #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
-                fileSize = 64 * 1024
-                trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(sala), str(fileSize))
-                # client.publish(topic, trama_FTR, qos = 2, retain = False)
-                clienteprueba.publicar(topic, trama_FTR)
-                #se le pide al cliente que espere, levanto bandera
-                esperandoRespuesta = True
-                while esperandoRespuesta == True:
-                    print("Esperando respuesta del servidor...")
-                    pass
-                #me conecto al socket y realizo la transferencia -> MESSI
+# #El thread de MQTT queda en el fondo, mientras en el main loop hacemos otra cosa
+# try:
+#     while True:
+#         # logging.info("Esperando comando")
+#         print("Hola, bienvenido al chat del grupo 14, and i'll tell you all about it when i see you again")
+#         print("Menu")
+#         print("1. Enviar texto")
+#         print("2. Enviar mensaje de voz")
+#         print("3.  Salir")
+#         print("")
+#         menu1 = input("¿Que opcion deseas? : ")  
+#         if(menu1 == "1"): #quiere enviar texto
+#             print("")
+#             print("    1. Enviar a usuario")
+#             print("    2. Enviar a sala")
+#             print("")
+#             menu2 = input("¿Que opcion deseas? : ")
+#             if(menu2 == "1"): #enviar a usuario
+#                 print("")
+#                 usuarioChat = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
+#                 topic = "usuarios/14/" + str(usuarioChat)
+#                 #lo suscribo al topic
+#                 clienteprueba.suscribirse(topic)
+#                 while True:
+#                     chat = input("Ingresa un mensaje: ")
+#                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
+#                     # print("trama chat: " + str(trama_chat))
+#                     # client.publish(topic, trama_chat, qos = 2, retain = False)
+#                     clienteprueba.publicar(topic, trama_chat)
+#             if(menu2 == "2"): #enviar a sala
+#                 print("")               
+#                 salaChat = input("Por favor ingresa la sala donde quieres chatear (S01): ")
+#                 topic = "salas/14/" + str(salaChat)
+#                 #lo suscribo al topic
+#                 # client.subscribe((str(topic), qos))
+#                 clienteprueba.suscribirse(topic)
+#                 while True:
+#                     chat = input("Ingresa un mensaje: ")
+#                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
+#                     # print("trama chat: " + str(trama_chat))
+#                     # client.publish(topic, trama_chat, qos = 2, retain = False)
+#                     clienteprueba.publicar(topic, trama_chat)
+
+#         if(menu1 == "2"): #quiere enviar o recibir archivos
+#             print("")
+#             print("    1. Enviar a usuario")
+#             print("    2. Enviar a sala")
+#             print("")
+#             menu2 = input("¿Que opcion deseas? : ")
+#             if(menu2 == "1"): #enviar a usuario
+#                 print("")
+#                 duracion = input("¿Que duracion tendra el audio? : ")
+#                 usuarioEnvio = input("Por favor ingresa el carnet del usuario al que deseas enviar el audio: ")
+#                 topic = "comandos/14/" + usuarioCarnet
+#                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
+#                 fileSize = 64 * 1024
+#                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
+#                 #se publica en mqtt
+#                 # client.publish(topic, trama_FTR, qos = 2, retain = False)
+#                 clienteprueba.publicar(topic, trama_FTR)
+#                 #se le pide al cliente que espere, levanto bandera
+#                 esperandoRespuesta = True
+#                 while esperandoRespuesta == True:                    
+#                     pass
+#                 #me conecto al socket y realizo la transferencia -> MESSI
+#                 print("Enviando archivo...")
+
+
+
+#             if(menu2 == "2"): #enviar a sala
+#                 print("")
+#                 duracion = input("¿Que duracion tendra el audio? : ")
+#                 sala = input("Por favor ingresa el nombre de la sala a la que deseas enviar el audio: ")
+#                 topic = "comandos/14/" + usuarioCarnet
+#                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
+#                 fileSize = 64 * 1024
+#                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(sala), str(fileSize))
+#                 # client.publish(topic, trama_FTR, qos = 2, retain = False)
+#                 clienteprueba.publicar(topic, trama_FTR)
+#                 #se le pide al cliente que espere, levanto bandera
+#                 esperandoRespuesta = True
+#                 while esperandoRespuesta == True:
+#                     print("Esperando respuesta del servidor...")
+#                     pass
+#                 #me conecto al socket y realizo la transferencia -> MESSI
                 
 
 
-except KeyboardInterrupt:
-    # logging.warning("Desconectando del broker...")
-    print("Desconectando del broker...")
+# except KeyboardInterrupt:
+#     # logging.warning("Desconectando del broker...")
+#     print("Desconectando del broker...")
 
-finally:
-    esperandoRespuesta = False
-    clienteprueba.pararLoop() #Se mata el hilo que verifica los topics en el fondo
-    clienteprueba.desconectarBroker() #Se desconecta del broker
-    # logging.info("Desconectado del broker. Saliendo...")
-    print("Desconectado del broker. Saliendo...")
+# finally:
+#     esperandoRespuesta = False
+#     clienteprueba.pararLoop() #Se mata el hilo que verifica los topics en el fondo
+#     clienteprueba.desconectarBroker() #Se desconecta del broker
+#     # logging.info("Desconectado del broker. Saliendo...")
+#     print("Desconectado del broker. Saliendo...")

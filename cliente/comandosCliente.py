@@ -24,6 +24,9 @@ class comandosCliente(object):
             trama = comando + bytes(separador) + bytes(variable1)
         elif(comando == binascii.unhexlify("05")): #comando para acknowledge
             trama = comando + bytes(separador) + bytes(variable1)
+        elif(comando == binascii.unhexlify("02")): #comando para FRR
+            variable2 = variable2.encode()
+            trama = comando + bytes(separador) + bytes(variable1) + bytes(separador) + bytes(variable2)
             
             
         return trama
