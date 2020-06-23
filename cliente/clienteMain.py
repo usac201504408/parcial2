@@ -19,16 +19,16 @@ for usuario in usuariosFile:
     usuarioCarnet = str(usuario)
 
 #se instancia la clase
-clienteprueba = clienteClass.clienteClass(usuarioCarnet)
-clienteprueba.conectarMQTT()
-clienteprueba.iniciarLoggin()
+clienteMain = clienteClass.clienteClass(usuarioCarnet)
+clienteMain.conectarMQTT()
+clienteMain.iniciarLoggin()
 #suscribirse a todos los topics del archivo
 topics = lecturaArchivos.LecturaArchivo("topics.txt").getArreglo()
 
 for topic in topics:
-    clienteprueba.suscribirse(topic)
+    clienteMain.suscribirse(topic)
 
-clienteprueba.iniciarLoop()
+clienteMain.iniciarLoop()
 
 
 
@@ -56,26 +56,34 @@ try:
                 usuarioChat = input("Por favor ingresa el carnet del usuario con el que quieres chatear: ")
                 topic = "usuarios/14/" + str(usuarioChat)
                 #lo suscribo al topic
-                clienteprueba.suscribirse(topic)
+                clienteMain.suscribirse(topic)
                 while True:
                     chat = input("Ingresa un mensaje: ")
                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
                     # print("trama chat: " + str(trama_chat))
                     # client.publish(topic, trama_chat, qos = 2, retain = False)
-                    clienteprueba.publicar(topic, trama_chat)
+                    clienteMain.publicar(topic, trama_chat)
             if(menu2 == "2"): #enviar a sala
-                print("")               
-                salaChat = input("Por favor ingresa la sala donde quieres chatear (S01): ")
+                print("")    
+                #pintar las salas
+                opcionesSala = lecturaArchivos.LecturaArchivo("salas.txt").getArreglo()
+                print("")
+                print("Salas disponibles")
+                for item_sala in opcionesSala:
+                    print(item_sala)
+
+                print("")           
+                salaChat = input("Por favor ingresa la sala donde quieres chatear ej:S01 : ")
                 topic = "salas/14/" + str(salaChat)
                 #lo suscribo al topic
                 # client.subscribe((str(topic), qos))
-                clienteprueba.suscribirse(topic)
+                clienteMain.suscribirse(topic)
                 while True:
                     chat = input("Ingresa un mensaje: ")
                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
                     # print("trama chat: " + str(trama_chat))
                     # client.publish(topic, trama_chat, qos = 2, retain = False)
-                    clienteprueba.publicar(topic, trama_chat)
+                    clienteMain.publicar(topic, trama_chat)
 
         if(menu1 == "2"): #quiere enviar o recibir archivos
             print("")
@@ -93,7 +101,7 @@ try:
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
                 #se publica en mqtt
                 # client.publish(topic, trama_FTR, qos = 2, retain = False)
-                clienteprueba.publicar(topic, trama_FTR)
+                clienteMain.publicar(topic, trama_FTR)
                 #se le pide al cliente que espere, levanto bandera
                 #INICIO SE COMENTA CODIGO PARA SERVER
                 # esperandoRespuesta = True
@@ -110,7 +118,7 @@ try:
                 # os.system('arecord -d '+duracion+' -f U8 -r 8000 prueba.mp3')
                 fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
                 trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(fileBinarios))
-                clienteprueba.publicar(topic_audios, trama_FRR)
+                clienteMain.publicar(topic_audios, trama_FRR)
 
 
 
@@ -125,13 +133,13 @@ try:
                     print(item_sala)
 
                 print("")
-                sala = input("¿A que sala deseas enviar tu audio? :  ")
+                sala = input("¿A que sala deseas enviar tu audio? ej:S01 :  ")
                 topic = "comandos/14/" + usuarioCarnet
                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
                 fileSize = 64 * 1024
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(sala), str(fileSize))
                 # client.publish(topic, trama_FTR, qos = 2, retain = False)
-                clienteprueba.publicar(topic, trama_FTR)
+                clienteMain.publicar(topic, trama_FTR)
                 #se le pide al cliente que espere, levanto bandera
                 #INICIO SE COMENTA CODIGO PARA SERVER
                 # esperandoRespuesta = True
@@ -148,13 +156,13 @@ try:
                 fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
                 with open('prueba.mp3', 'rb') as archivo:
                     trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(sala), str(archivo))
-                    clienteprueba.publicar(topic_audios, trama_FRR)
+                    clienteMain.publicar(topic_audios, trama_FRR)
         
         
         if(menu1 == "3"): #quiere salir
             esperandoRespuesta = False
-            clienteprueba.pararLoop() #Se mata el hilo que verifica los topics en el fondo
-            clienteprueba.desconectarBroker() #Se desconecta del broker
+            clienteMain.pararLoop() #Se mata el hilo que verifica los topics en el fondo
+            clienteMain.desconectarBroker() #Se desconecta del broker
             # logging.info("Desconectado del broker. Saliendo...")
             print("Desconectado del broker. Saliendo...")
             break
@@ -167,7 +175,7 @@ except KeyboardInterrupt:
 
 finally:
     esperandoRespuesta = False
-    clienteprueba.pararLoop() #Se mata el hilo que verifica los topics en el fondo
-    clienteprueba.desconectarBroker() #Se desconecta del broker
+    clienteMain.pararLoop() #Se mata el hilo que verifica los topics en el fondo
+    clienteMain.desconectarBroker() #Se desconecta del broker
     # logging.info("Desconectado del broker. Saliendo...")
     print("Desconectado del broker. Saliendo...")
