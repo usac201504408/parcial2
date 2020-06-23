@@ -25,7 +25,7 @@ class clienteClass(object):
 
     def hiloAudio(self):
         #RECIBIR EL ARCHIVO EN EL PARAMETRO ESTA PENDIENTE
-        os.system('aplay prueba.mp3')
+        os.system('aplay recibido.mp3')
 
 
 
@@ -55,7 +55,7 @@ class clienteClass(object):
 
         #obtener que topic es
         splitTopic = str(msg.topic).split("/")
-        print(splitTopic)
+        # print(splitTopic)
         topicBase = splitTopic[0]
 
         if(topicBase != "audio"):
@@ -121,11 +121,20 @@ class clienteClass(object):
             # print(type(arregloTrama_split[0]))
             # bytesArchivo = bytes(msg.payload)
             # print(type(bytesArchivo))
-            print(msg.payload)
-            print(type(msg.payload))
-            out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
+            # print(msg.payload)
+            # print(type(msg.payload))
+            #guardo el archivo y luego llamo al hilo
+            nombreArchivo = "recibido.mp3"
+            out_file = open(nombreArchivo, "wb") # open for [w]riting as [b]inary
             out_file.write(msg.payload)
             out_file.close()
+
+            self.t2 = threading.Thread(name = 'Contador de 1 segundo',
+                                target = self.hiloAudio,
+                                args = (()),
+                                daemon = True
+                            )
+            self.t2.start()
             
       
         
