@@ -143,7 +143,7 @@ try:
 
             if(menu2 == "2"): #enviar a sala
                 print("")
-                duracion = input("¿Que duracion tendra el audio? : ")
+                duracion = input("¿Que duracion tendra el audio en segundos? ej:1  : ")
                 #pintar las salas
                 opcionesSala = lecturaArchivos.LecturaArchivo("salas.txt").getArreglo()
                 print("")
