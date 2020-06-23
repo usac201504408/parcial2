@@ -25,7 +25,7 @@ class clienteClass(object):
 
     def hiloAudio(self):
         #RECIBIR EL ARCHIVO EN EL PARAMETRO ESTA PENDIENTE
-        os.system('aplay recibido.mp3')
+        os.system('aplay ../cliente/tempFiles/recibido.mp3')
 
 
 
@@ -124,7 +124,7 @@ class clienteClass(object):
             # print(msg.payload)
             # print(type(msg.payload))
             #guardo el archivo y luego llamo al hilo
-            nombreArchivo = "recibido.mp3"
+            nombreArchivo = "../cliente/tempFiles/recibido.mp3"
             out_file = open(nombreArchivo, "wb") # open for [w]riting as [b]inary
             out_file.write(msg.payload)
             out_file.close()
