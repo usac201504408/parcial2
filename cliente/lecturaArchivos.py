@@ -20,12 +20,11 @@ class LecturaArchivo(object):
         archivo.write(textoAppend)
         archivo.close()
 
-    def getBytes(self):
-        audio = bytes
-        archivo = open(self.nombreArchivo, 'rb')
-        audio = archivo
-        archivo.close()
-        return audio
+    def getBytes(self):       
+        in_file = open("prueba.mp3", "rb") # opening for [r]eading as [b]inary
+        data = in_file.read() # if you only wanted to read 512 bytes, do .read(512)
+        in_file.close()
+        return data
 
 
 #Ejemplo de consumo de la clase

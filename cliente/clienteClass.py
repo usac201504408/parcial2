@@ -9,6 +9,7 @@ import time
 import lecturaArchivos
 import os
 
+
 class clienteClass(object):
 
     def __init__(self, usuarioCliente):
@@ -73,7 +74,7 @@ class clienteClass(object):
             print("Estas recibiendo del topic " + str(msg.topic) + " binarios del audio: "  + str(arregloTrama_split[2]))
             #reproduzco el audio en hilo
 
-            print(arregloTrama_split[2])
+            # print(msg.payload)
           
 
             # buff= 65495
@@ -82,7 +83,12 @@ class clienteClass(object):
             #     buff = arregloTrama_split[2]
             #     archivo.write(buff)
             # archivo.close()
-            
+            # archivo = open('recibido.mp3', 'wb')
+            # archivo.write(arregloTrama_split[2])
+            # archivo.close()
+            # out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
+            # out_file.write(arregloTrama_split[2])
+            # out_file.close()
             
 
 
@@ -92,6 +98,7 @@ class clienteClass(object):
                                 daemon = True
                             )
             self.t2.start()
+       
 
              
 

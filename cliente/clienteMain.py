@@ -115,10 +115,22 @@ try:
                 #publico en topic de audios
                 topic_audios = "audio/14/" + usuarioEnvio
                 #PENDIENTE GRABAR EL AUDIO Y GUARDARLO
-                # os.system('arecord -d '+duracion+' -f U8 -r 8000 prueba.mp3')
-                fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
-                trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(fileBinarios))
-                clienteMain.publicar(topic_audios, trama_FRR)
+
+
+                #ESTO SI FUNCIONA, NO FUNCIONA AL DEJARLO EN OTRA CLASE VERIFICAR POR QUE Y VER POR QUE NO PUBLICA EN EL TOPIC BIEN
+                in_file = open("prueba.mp3", "rb") # opening for [r]eading as [b]inary
+                data = in_file.read() # if you only wanted to read 512 bytes, do .read(512)
+                in_file.close()
+                # print(data)
+
+                out_file = open("recibido.mp3", "wb") # open for [w]riting as [b]inary
+                out_file.write(data)
+                out_file.close()
+
+                
+                trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(data))
+               
+                clienteMain.publicar(topic_audios, bytes(trama_FRR))
 
 
 
