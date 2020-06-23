@@ -13,7 +13,7 @@ class comandosCliente(object):
         if(comando != ""):
 
             trama = bytes
-            #se codifica la variable para poderla sumar
+            #MVFC se codifica la variable para poderla sumar
             variable1 = variable1.encode()
             separador = separador.encode()
             #puede venir 1, 2 o mas, yo voy a empezar a partir para armar la trama
@@ -39,7 +39,7 @@ class comandosCliente(object):
         
 
     def splitTramaCliente(self, trama, separador = "$"):
-        #verifico si le muestro o no al usuario este mensaje
+        #MVFC verifico si le muestro o no al usuario este mensaje
         #las tramas ALIVE emitidas por el cliente no se las muestro a el
         trama = bytes(trama)
         trama = trama.decode()

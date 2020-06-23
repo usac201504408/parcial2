@@ -5,7 +5,7 @@ from broker import *
 from globalconst import *
 import os
 
-###empieza codigo de consumo de la clase
+##JPGM empieza codigo de consumo de la clase
 #variables globales:
 qos = 2
 #inicia loop principal
@@ -34,10 +34,10 @@ clienteMain.iniciarLoop()
 
 
 
-#El thread de MQTT queda en el fondo, mientras en el main loop hacemos otra cosa
+#JGPM El thread de MQTT queda en el fondo, mientras en el main loop hacemos otra cosa
 try:
     while True:
-        # logging.info("Esperando comando")
+
         print("Hola, bienvenido al chat del grupo 14, and i'll tell you all about it when i see you again")
         print("Menu")
         print("1. Enviar texto")
@@ -60,8 +60,6 @@ try:
                 while True:
                     chat = input("Ingresa un mensaje: ")
                     trama_chat = comandosCliente.comandosCliente().getTrama(COMMAND_CHAT, str(chat))
-                    # print("trama chat: " + str(trama_chat))
-                    # client.publish(topic, trama_chat, qos = 2, retain = False)
                     clienteMain.publicar(topic, trama_chat)
             if(menu2 == "2"): #enviar a sala
                 print("")    
@@ -94,27 +92,25 @@ try:
             menu2 = input("¿Que opcion deseas? : ")
             if(menu2 == "1"): #enviar a usuario
                 print("")
-                duracion = input("¿Que duracion tendra el audio? : ")
-                usuarioEnvio = input("Por favor ingresa el carnet del usuario al que deseas enviar el audio: ")
-               
+                duracion = input("¿Que duracion tendra el audio en segundos? ej:1 : ")
+                usuarioEnvio = input("Por favor ingresa el carnet del usuario al que deseas enviar el audio: ")              
                 topic = "comandos/14/" + usuarioCarnet
                 #empezar hilo de grabacion, esperar hasta que se termine de grabar para enviar el request
-                fileSize = 64 * 1024
-               
+                fileSize = 64 * 1024               
                 trama_FTR = comandosCliente.comandosCliente().getTrama(COMMAND_FTR, str(usuarioEnvio), str(fileSize))
                 #se publica en mqtt
                 # client.publish(topic, trama_FTR, qos = 2, retain = False)
                
                 clienteMain.publicar(topic, trama_FTR)
                 #se le pide al cliente que espere, levanto bandera
-                #INICIO SE COMENTA CODIGO PARA SERVER
+                #CYO INICIO SE COMENTA CODIGO PARA SERVER
                 # esperandoRespuesta = True
                 # while esperandoRespuesta == True:                    
                 #     pass
                 # #me conecto al socket y realizo la transferencia -> MESSI
                 # print("Enviando archivo...")
                 #FIN SE COMENTA CODIGO PARA SERVER
-                #empiezo a grabar el audio
+                #CYO empiezo a grabar el audio
 
                 #publico en topic de audios
                 topic_audios = "audio/14/" + usuarioEnvio
@@ -170,14 +166,6 @@ try:
                 # #me conecto al socket y realizo la transferencia -> MESSI
                 #FIN SE COMENTA CODIGO PARA SERVER
 
-                #empiezo a grabar el audio
-
-                #  #publico en topic de audios
-                # topic_audios = "audio/14/" + sala
-                # fileBinarios = lecturaArchivos.LecturaArchivo("prueba.mp3").getBytes()
-                # with open('prueba.mp3', 'rb') as archivo:
-                #     trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(sala), str(archivo))
-                #     clienteMain.publicar(topic_audios, trama_FRR)
                 #publico en topic de audios
                 topic_audios = "audio/14/" + sala
                 os.system('arecord -d '+duracion+' -f U8 -r 8000 ../cliente/tempFiles/enviar.mp3')
@@ -187,16 +175,8 @@ try:
                 in_file.close()
                 # print(data)
 
-                # out_file = open("recibido.mp3", "wb") 
-                # out_file.write(data)
-                # out_file.close()
-                # print(data)
-                # print("ya leyo")
-                # #se manda la data binaria
-                # print(type(data))
                 #trama_FRR = comandosCliente.comandosCliente().getTrama(COMMAND_FRR, str(usuarioCarnet), str(data))
-                #trama_FRR = comandosCliente.comandosCliente().getTrama("", str(data))
-                # print(trama_FRR)
+  
                 data = bytearray(data)
                 clienteMain.publicar(topic_audios, data)
         

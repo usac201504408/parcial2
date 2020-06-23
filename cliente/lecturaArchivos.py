@@ -1,4 +1,4 @@
-#clase para lectura de archivos
+#JPGM clase para lectura de archivos
 
 
 class LecturaArchivo(object):
@@ -21,8 +21,8 @@ class LecturaArchivo(object):
         archivo.close()
 
     def getBytes(self):       
-        in_file = open("prueba.mp3", "rb") # opening for [r]eading as [b]inary
-        data = in_file.read() # if you only wanted to read 512 bytes, do .read(512)
+        in_file = open("prueba.mp3", "rb") 
+        data = in_file.read() 
         in_file.close()
         return data
 
